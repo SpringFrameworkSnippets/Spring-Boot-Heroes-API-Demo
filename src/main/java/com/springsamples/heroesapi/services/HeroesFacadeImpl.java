@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Service
 public class HeroesFacadeImpl implements HeroesFacade {
+    //TODO we should get hero domain objects from service and map them out
     @Override
     public List<HeroDto> findAll() {
         return List.of(HeroDto.builder()
