@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 public class HeroesControllerTest {
 
+    private static final String BASE_URL = "/";
+
     @Autowired
     private WebApplicationContext context;
 
@@ -30,7 +32,7 @@ public class HeroesControllerTest {
     @Test
     @DisplayName("Should get 200 OK response")
     public void findHeroes_200() throws Exception {
-        this.mockMvc.perform(get("/"))
+        this.mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk());
     }
 }
