@@ -1,5 +1,6 @@
 package com.springsamples.heroesapi.web;
 
+import com.springsamples.heroesapi.config.aspects.LogExecutionTime;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class HeroesController {
     private final HeroesFacade facade;
 
     @GetMapping
+    @LogExecutionTime
     public ResponseEntity<?> heroes() {
         var heroes = facade.findAll();
         return ResponseEntity.ok(heroes);
