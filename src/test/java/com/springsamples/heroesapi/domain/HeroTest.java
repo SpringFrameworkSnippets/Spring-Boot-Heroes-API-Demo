@@ -1,6 +1,5 @@
 package com.springsamples.heroesapi.domain;
 
-import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
