@@ -21,8 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class})
 @ContextConfiguration(classes = HeroesServiceImpl.class)
@@ -78,6 +77,6 @@ class HeroesServiceImplTest {
         assertThat(heroes).isNotEmpty();
         assertThat(heroes).hasSize(2);
         then(repository).should(only()).findAll();
-        then(mapper).should(only()).entityToDomain(any());
+        then(mapper).should(times(2)).entityToDomain(any());
     }
 }

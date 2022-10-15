@@ -1,21 +1,24 @@
 package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
+import com.springsamples.heroesapi.mappers.HeroesMapper;
+import com.springsamples.heroesapi.repositories.HeroesRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class HeroesServiceImpl implements HeroesService {
-    //TODO we should get hero entities from some repository and map them out
+
+    private final HeroesRepository repository;
+    private final HeroesMapper mapper;
     @Override
     public List<Hero> findAll() {
-        return List.of(
-                Hero.builder()
-                        .id(UUID.randomUUID())
-                        .name("Batman")
-                        .build());
+        return repository.findAll().stream()
+                .map(mapper::entityToDomain)
+                .collect(Collectors.toList());
     }
 }
