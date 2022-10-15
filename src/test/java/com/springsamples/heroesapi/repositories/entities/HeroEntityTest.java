@@ -1,12 +1,12 @@
 package com.springsamples.heroesapi.repositories.entities;
 
-import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HeroEntityTest {
 
