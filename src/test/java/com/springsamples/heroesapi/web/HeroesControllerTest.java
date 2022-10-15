@@ -12,12 +12,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 public class HeroesControllerTest {
+
+    private static final String USERNAME = "TEST";
 
     @Autowired
     private WebApplicationContext context;
@@ -35,14 +38,16 @@ public class HeroesControllerTest {
     @Test
     @DisplayName("Should get 200 OK response")
     public void findHeroes_200() throws Exception {
-        this.mockMvc.perform(get(BASE_URL))
+        this.mockMvc.perform(get(BASE_URL)
+                        .with(user(USERNAME)))
                 .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Should get 200 OK not empty response")
     public void findHeroes_200_NotEmpty() throws Exception {
-        this.mockMvc.perform(get(BASE_URL))
+        this.mockMvc.perform(get(BASE_URL)
+                        .with(user(USERNAME)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", not(empty())));
@@ -51,7 +56,8 @@ public class HeroesControllerTest {
     @Test
     @DisplayName("Should get 200 OK hero list response")
     public void findHeroes_200_HeroList() throws Exception {
-        this.mockMvc.perform(get(BASE_URL))
+        this.mockMvc.perform(get(BASE_URL)
+                        .with(user(USERNAME)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
