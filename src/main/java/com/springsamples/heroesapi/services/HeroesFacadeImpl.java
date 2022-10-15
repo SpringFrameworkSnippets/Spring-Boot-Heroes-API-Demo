@@ -1,19 +1,24 @@
 package com.springsamples.heroesapi.services;
 
+import com.springsamples.heroesapi.mappers.HeroesMapper;
 import com.springsamples.heroesapi.web.model.HeroDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class HeroesFacadeImpl implements HeroesFacade {
-    //TODO we should get hero domain objects from service and map them out
+
+    private final HeroesService service;
+    private final HeroesMapper mapper;
+
     @Override
     public List<HeroDto> findAll() {
-        return List.of(HeroDto.builder()
-                .id(UUID.randomUUID())
-                .name("Batman")
-                .build());
+        return service.findAll().stream()
+                .map(mapper::domainToDto)
+                .collect(Collectors.toList());
     }
 }
