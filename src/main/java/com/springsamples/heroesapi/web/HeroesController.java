@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 
 @RestController
@@ -13,6 +15,7 @@ public class HeroesController {
 
     @GetMapping
     public ResponseEntity<?> heroes() {
-        return ResponseEntity.ok().build();
+        var heroes = List.of("Superman", "batman");
+        return ResponseEntity.ok(heroes);
     }
 }
