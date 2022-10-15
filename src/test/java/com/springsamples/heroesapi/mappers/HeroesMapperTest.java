@@ -1,6 +1,7 @@
 package com.springsamples.heroesapi.mappers;
 
 import com.springsamples.heroesapi.domain.Hero;
+import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,15 @@ public class HeroesMapperTest {
     HeroesMapper mapper;
 
     private Hero domain;
+    private HeroEntity entity;
 
     @BeforeEach
     void beforeEach() {
         domain = Hero.builder()
+                .id(ID)
+                .name(NAME)
+                .build();
+        entity = HeroEntity.builder()
                 .id(ID)
                 .name(NAME)
                 .build();
@@ -39,5 +45,13 @@ public class HeroesMapperTest {
         var dto = mapper.domainToDto(domain);
         assertThat(dto.getId()).isEqualTo(domain.getId());
         assertThat(dto.getName()).isEqualTo(domain.getName());
+    }
+
+    @Test
+    @DisplayName("Should map entity hero object to domain one")
+    void map_entityToDomain() {
+        var domain = mapper.entityToDomain(entity);
+        assertThat(domain.getId()).isEqualTo(entity.getId());
+        assertThat(domain.getName()).isEqualTo(entity.getName());
     }
 }
