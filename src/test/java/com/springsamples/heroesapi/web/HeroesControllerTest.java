@@ -58,4 +58,11 @@ public class HeroesControllerTest {
                 .andExpect(jsonPath("$[0].id", not(emptyString())))
                 .andExpect(jsonPath("$[0].name", not(emptyString())));
     }
+
+    @Test
+    @DisplayName("Should get 401 unauthorized without basic auth")
+    public void findHeroes_Unauthorized() throws Exception {
+        this.mockMvc.perform(get(BASE_URL))
+                .andExpect(status().isUnauthorized());
+    }
 }
