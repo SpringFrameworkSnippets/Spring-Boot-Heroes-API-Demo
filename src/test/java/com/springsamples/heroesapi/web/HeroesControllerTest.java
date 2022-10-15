@@ -9,13 +9,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
 public class HeroesControllerTest {
-
-    private static final String BASE_URL = "/";
 
     @Autowired
     private WebApplicationContext context;
