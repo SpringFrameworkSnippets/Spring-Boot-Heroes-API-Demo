@@ -1,11 +1,10 @@
 package com.springsamples.heroesapi.web;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,7 +16,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest
+@SpringBootTest
 public class HeroesControllerTest {
 
     @Autowired
@@ -33,7 +32,6 @@ public class HeroesControllerTest {
                 .build();
     }
 
-    @Disabled("Failing until we expose Spring Security config")
     @Test
     @DisplayName("Should get 200 OK response")
     public void findHeroes_200() throws Exception {
@@ -41,7 +39,6 @@ public class HeroesControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled("Failing until we expose Spring Security config")
     @Test
     @DisplayName("Should get 200 OK not empty response")
     public void findHeroes_200_NotEmpty() throws Exception {
@@ -51,7 +48,6 @@ public class HeroesControllerTest {
                 .andExpect(jsonPath("$", not(empty())));
     }
 
-    @Disabled("Failing until we expose Spring Security config")
     @Test
     @DisplayName("Should get 200 OK hero list response")
     public void findHeroes_200_HeroList() throws Exception {
