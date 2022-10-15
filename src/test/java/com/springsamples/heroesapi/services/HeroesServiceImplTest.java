@@ -2,6 +2,7 @@ package com.springsamples.heroesapi.services;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ class HeroesServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should get hero entities from repository")
     void findAll() {
         var heroes = service.findAll();
         assertThat(heroes).isNotEmpty();
