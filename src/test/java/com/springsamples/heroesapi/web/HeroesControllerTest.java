@@ -42,6 +42,7 @@ public class HeroesControllerTest {
     private static final String NOT_FOUND_HERO_MESSAGE = "Hero with id " + NOT_FOUND_HERO_ID + " not found";
     public static final String HERO_REQUEST_PARAM_NAME = "name";
     public static final String HERO_REQUEST_PARAM_VALUE = "man";
+    public static final String HERO_REQUEST_PARAM_INVALID_VALUE = "asdfghjklpoiuytrqshb123";
 
     @Autowired
     private WebApplicationContext context;
@@ -196,5 +197,16 @@ public class HeroesControllerTest {
                         .with(user(USERNAME))
                         .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Should return 400 response with error detail when filter is invalid")
+    public void findHeroByName_400_whenFilterInvalid() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/filter")
+                        .with(user(USERNAME))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_INVALID_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.reason", is("Filter format is invalid")));
     }
 }
