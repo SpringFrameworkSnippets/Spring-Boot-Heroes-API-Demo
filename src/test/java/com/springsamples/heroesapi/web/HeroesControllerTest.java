@@ -146,4 +146,17 @@ public class HeroesControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", notNullValue()));
     }
+
+    @Test
+    @DisplayName("Should get hero by ID from facade")
+    public void findHeroeById_facadeInteraction() throws Exception {
+        then(facade).shouldHaveNoInteractions();
+        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", notNullValue()));
+        then(facade).should(only()).findById(UUID.fromString(VALID_HERO_ID));
+    }
 }

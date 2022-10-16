@@ -7,6 +7,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,5 +24,10 @@ public class HeroesFacadeImpl implements HeroesFacade {
         return service.findAll().stream()
                 .map(mapper::map)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<HeroDto> findById(UUID id) {
+        return Optional.empty();
     }
 }
