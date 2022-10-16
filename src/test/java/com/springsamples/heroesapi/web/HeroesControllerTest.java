@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,6 +34,7 @@ public class HeroesControllerTest {
 
     private static final String USERNAME = "TEST";
     private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
+    private static final String INVALID_HERO_ID = "0";
 
     @Autowired
     private WebApplicationContext context;
@@ -120,5 +122,16 @@ public class HeroesControllerTest {
                         .with(user(USERNAME)))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    @DisplayName("Should return 400 when ID param is invalid, and return an appropriate message")
+    public void findHeroById_400_ErrorDetail_WhenInValidId() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/{id}", INVALID_HERO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST)))
+                .andExpect(jsonPath("$.reason", is("Invalid ID format")));
     }
 }
