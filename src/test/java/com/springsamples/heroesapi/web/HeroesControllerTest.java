@@ -111,4 +111,13 @@ public class HeroesControllerTest {
                 .andExpect(status().isOk());
         then(facade).should(only()).findAll();
     }
+
+    @Test
+    @DisplayName("Should return 200 OK response with ID param")
+    public void findHeroById_200() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/{id}", "1")
+                        .with(user(USERNAME)))
+                .andExpect(status().isOk());
+
+    }
 }
