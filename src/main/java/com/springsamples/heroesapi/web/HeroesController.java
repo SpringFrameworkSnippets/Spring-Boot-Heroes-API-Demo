@@ -34,4 +34,9 @@ public class HeroesController {
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new HeroNotFoundException(id));
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> heroesByName(@RequestParam String name) {
+        return ResponseEntity.ok().build();
+    }
 }
