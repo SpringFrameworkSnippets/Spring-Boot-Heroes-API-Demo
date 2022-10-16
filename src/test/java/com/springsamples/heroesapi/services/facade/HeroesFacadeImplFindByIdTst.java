@@ -1,7 +1,10 @@
-package com.springsamples.heroesapi.services;
+package com.springsamples.heroesapi.services.facade;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
+import com.springsamples.heroesapi.services.HeroesFacade;
+import com.springsamples.heroesapi.services.HeroesFacadeImpl;
+import com.springsamples.heroesapi.services.HeroesService;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,19 +17,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.springsamples.heroesapi.constants.Test.BATMAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.reset;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @ContextConfiguration( classes = {HeroesFacadeImpl.class})
-class HeroesFacadeImplTest {
+public class HeroesFacadeImplFindByIdTst {
 
     @Autowired
     private HeroesFacade facade;
@@ -39,37 +43,12 @@ class HeroesFacadeImplTest {
 
     @BeforeEach
     void beforeEach() {
-        given(service.findAll()).willReturn(List.of(
-                Hero.builder()
-                        .id(UUID.randomUUID())
-                        .name("Batman")
-                        .build(),
-                Hero.builder()
-                        .id(UUID.randomUUID())
-                        .name("Superman")
-                        .build()
-        ));
-
         given(service.findById(any())).willReturn(Optional.of(
                 Hero.builder()
                         .id(UUID.randomUUID())
-                        .name("Tracer")
+                        .name(BATMAN)
                         .build()
         ));
-
-        given(service.findByNameContains(any())).willReturn(List.of(
-                Hero.builder()
-                        .id(UUID.randomUUID())
-                        .name("Batman")
-                        .build(),
-                Hero.builder()
-                        .id(UUID.randomUUID())
-                        .name("Superman")
-                        .build()
-        ));
-
-        // Here we are not testing mapping logic,
-        // so we don't care about the outcome of this computation
         given(mapper.map(any())).willReturn(HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
@@ -83,25 +62,6 @@ class HeroesFacadeImplTest {
     }
 
     @Test
-    void findAll() {
-        // This is an example of a bad tst
-        // At this point, we have provided a findAll implementation for our facade that was not cover
-        // by tests upfront. This was the result of a misleading refactor
-        var heroes = facade.findAll();
-        assertThat(heroes).isNotNull();
-    }
-
-    @Test
-    @DisplayName("Should get hero domain objects from service")
-    void findAll_withServiceInteraction() {
-        then(service).shouldHaveNoInteractions();
-        var heroes = facade.findAll();
-        then(service).should(only()).findAll();
-        assertThat(heroes).isNotEmpty();
-        assertThat(heroes).hasSize(2);
-    }
-
-    @Test
     @DisplayName("Should get hero domain by ID")
     void findById_notNull() {
         var optionalHeroDTO = facade.findById(UUID.randomUUID());
@@ -109,6 +69,7 @@ class HeroesFacadeImplTest {
     }
 
     @Test
+    @DisplayName("Should get hero domain by ID from service")
     void findById_notNull_serviceInteraction() {
         then(service).shouldHaveNoInteractions();
         then(mapper).shouldHaveNoInteractions();
@@ -121,20 +82,6 @@ class HeroesFacadeImplTest {
         then(mapper).should(only()).map(any());
         then(mapper).shouldHaveNoMoreInteractions();
         then(service).should(only()).findById(any());
-        then(service).shouldHaveNoMoreInteractions();
-    }
-
-    @Test
-    @DisplayName("Should get heroes domain objects by name filter from service")
-    void findByName_withServiceInteraction() {
-        then(service).shouldHaveNoInteractions();
-        then(mapper).shouldHaveNoInteractions();
-        var heroesByName = facade.findByNameContains("man");
-        assertThat(heroesByName).isNotEmpty();
-        assertThat(heroesByName).hasSize(2);
-        then(mapper).should(times(2)).map(any());
-        then(mapper).shouldHaveNoMoreInteractions();
-        then(service).should(only()).findByNameContains("man");
         then(service).shouldHaveNoMoreInteractions();
     }
 }
