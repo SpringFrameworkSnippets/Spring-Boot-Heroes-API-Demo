@@ -1,7 +1,7 @@
 package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
-import com.springsamples.heroesapi.mappers.HeroesMapper;
+import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
 import com.springsamples.heroesapi.repositories.HeroesRepository;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +31,7 @@ class HeroesServiceImplTest {
     HeroesService service;
 
     @MockBean
-    HeroesMapper mapper;
+    IHeroMapperEntityToDomain mapper;
 
     @MockBean
     HeroesRepository repository;
@@ -49,7 +49,7 @@ class HeroesServiceImplTest {
                         .build()
         ));
 
-        given(mapper.entityToDomain(any())).willReturn(Hero.builder()
+        given(mapper.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
                 .name("domain")
                 .build());
@@ -77,6 +77,6 @@ class HeroesServiceImplTest {
         assertThat(heroes).isNotEmpty();
         assertThat(heroes).hasSize(2);
         then(repository).should(only()).findAll();
-        then(mapper).should(times(2)).entityToDomain(any());
+        then(mapper).should(times(2)).map(any());
     }
 }

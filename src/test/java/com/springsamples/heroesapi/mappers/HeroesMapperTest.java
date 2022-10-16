@@ -15,14 +15,17 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HeroesMapperImpl.class})
+@ContextConfiguration(classes = {HeroMapperDomainToDtoMapStructImpl.class, HeroMapperEntityToDomainMapStructImpl.class})
 public class HeroesMapperTest {
 
     private static final UUID ID = UUID.randomUUID();
     private static final String NAME = "Batman";
 
     @Autowired
-    HeroesMapper mapper;
+    IHeroMapperEntityToDomain mapperEntityToDomain;
+
+    @Autowired
+    IHeroMapperDomainToDto mapperDomainToDto;
 
     private Hero domain;
     private HeroEntity entity;
@@ -42,7 +45,7 @@ public class HeroesMapperTest {
     @Test
     @DisplayName("Should map domain hero object to presentational one")
     void map_domainToDto() {
-        var dto = mapper.domainToDto(domain);
+        var dto = mapperDomainToDto.map(domain);
         assertThat(dto.getId()).isEqualTo(domain.getId());
         assertThat(dto.getName()).isEqualTo(domain.getName());
     }
@@ -50,7 +53,7 @@ public class HeroesMapperTest {
     @Test
     @DisplayName("Should map entity hero object to domain one")
     void map_entityToDomain() {
-        var domain = mapper.entityToDomain(entity);
+        var domain = mapperEntityToDomain.map(entity);
         assertThat(domain.getId()).isEqualTo(entity.getId());
         assertThat(domain.getName()).isEqualTo(entity.getName());
     }

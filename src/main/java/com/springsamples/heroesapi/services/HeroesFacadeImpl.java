@@ -1,6 +1,6 @@
 package com.springsamples.heroesapi.services;
 
-import com.springsamples.heroesapi.mappers.HeroesMapper;
+import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 public class HeroesFacadeImpl implements HeroesFacade {
 
     private final HeroesService service;
-    private final HeroesMapper mapper;
+    private final IHeroMapperDomainToDto mapper;
 
     @Cacheable(cacheNames = "heroesCache")
     @Override
     public List<HeroDto> findAll() {
         return service.findAll().stream()
-                .map(mapper::domainToDto)
+                .map(mapper::map)
                 .collect(Collectors.toList());
     }
 }

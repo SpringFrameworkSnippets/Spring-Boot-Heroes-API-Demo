@@ -1,7 +1,7 @@
 package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
-import com.springsamples.heroesapi.mappers.HeroesMapper;
+import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class HeroesFacadeImplTest {
     private HeroesService service;
 
     @MockBean
-    private HeroesMapper mapper;
+    private IHeroMapperDomainToDto mapper;
 
     @BeforeEach
     void beforeEach() {
@@ -51,7 +51,7 @@ class HeroesFacadeImplTest {
         ));
         // Here we are not testing mapping logic,
         // so we don't care about the outcome of this computation
-        given(mapper.domainToDto(any())).willReturn(HeroDto.builder()
+        given(mapper.map(any())).willReturn(HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
                 .build());

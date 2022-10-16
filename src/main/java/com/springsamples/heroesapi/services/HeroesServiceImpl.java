@@ -1,7 +1,7 @@
 package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
-import com.springsamples.heroesapi.mappers.HeroesMapper;
+import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
 import com.springsamples.heroesapi.repositories.HeroesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 public class HeroesServiceImpl implements HeroesService {
 
     private final HeroesRepository repository;
-    private final HeroesMapper mapper;
+    private final IHeroMapperEntityToDomain mapper;
     @Override
     public List<Hero> findAll() {
         return repository.findAll().stream()
-                .map(mapper::entityToDomain)
+                .map(mapper::map)
                 .collect(Collectors.toList());
     }
 }
