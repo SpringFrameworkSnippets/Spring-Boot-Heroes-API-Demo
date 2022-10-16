@@ -28,6 +28,9 @@ public class HeroesFacadeImpl implements HeroesFacade {
 
     @Override
     public Optional<HeroDto> findById(UUID id) {
-        return Optional.empty();
+        return Optional.of(HeroDto.builder()
+                .id(id)
+                .name("Batman")
+                .build());
     }
 }
