@@ -38,6 +38,7 @@ public class HeroesControllerTest {
     private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
     private static final String INVALID_HERO_ID = "0";
     private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid value 0 for field id";
+    private static final String NOT_FOUND_HERO_ID = "003c93c1-7958-4a55-81c0-c4dded1637fa";
 
     @Autowired
     private WebApplicationContext context;
@@ -167,6 +168,21 @@ public class HeroesControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", notNullValue()));
         then(facade).should(only()).findById(UUID.fromString(VALID_HERO_ID));
+        then(facade).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    @DisplayName("Should return 404 code error with detail message when hero was not found")
+    public void findHeroById_404_HeroNotFound_errorDetail() throws Exception {
+        given(facade.findById(ArgumentMatchers.any())).willReturn(Optional.empty());
+        then(facade).shouldHaveNoInteractions();
+        this.mockMvc.perform(get(BASE_URL + "/{id}", NOT_FOUND_HERO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code", is(HttpStatus.NOT_FOUND.value())))
+                .andExpect(jsonPath("$.reason", is("Hero with id " + NOT_FOUND_HERO_ID + "not found")));
+        then(facade).should(only()).findById(UUID.fromString(NOT_FOUND_HERO_ID));
         then(facade).shouldHaveNoMoreInteractions();
     }
 }
