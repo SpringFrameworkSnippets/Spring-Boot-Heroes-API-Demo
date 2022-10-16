@@ -14,7 +14,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -36,7 +38,7 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorDto handleConstraintViolation(ConstraintViolationException ex) {
         return ErrorDto.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
-                .reason("Filter format is invalid")
+                .reason(buildConstraintViolationMessage(ex))
                 .build();
     }
 
@@ -51,5 +53,9 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
                         .code(HttpStatus.BAD_REQUEST.value())
                         .reason(output)
                         .build());
+    }
+
+    private String buildConstraintViolationMessage(ConstraintViolationException ex) {
+        return ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(". "));
     }
 }

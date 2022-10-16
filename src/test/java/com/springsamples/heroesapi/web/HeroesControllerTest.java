@@ -42,7 +42,10 @@ public class HeroesControllerTest {
     private static final String NOT_FOUND_HERO_MESSAGE = "Hero with id " + NOT_FOUND_HERO_ID + " not found";
     public static final String HERO_REQUEST_PARAM_NAME = "name";
     public static final String HERO_REQUEST_PARAM_VALUE = "man";
-    public static final String HERO_REQUEST_PARAM_INVALID_VALUE = "asdfghjklpoiuytrqshb123";
+    public static final String HERO_REQUEST_PARAM_INVALID_SIZE = "asdfghjklpoiuytrqshb123";
+    public static final String HERO_REQUEST_PARAM_BLANK = "";
+    public static final String INVALID_SIZE_FILTER_MESSAGE = "Filter length must be between 1 and 20";
+    public static final String BLANK_FILTER_MESSAGE = "Filter length must be between 1 and 20. Filter must not be blank";
 
     @Autowired
     private WebApplicationContext context;
@@ -200,13 +203,24 @@ public class HeroesControllerTest {
     }
 
     @Test
-    @DisplayName("Should return 400 response with error detail when filter is invalid")
-    public void findHeroByName_400_whenFilterInvalid() throws Exception {
+    @DisplayName("Should return 400 response with error detail when filter size is invalid")
+    public void findHeroByName_400_whenFilterInvalidSize() throws Exception {
         this.mockMvc.perform(get(BASE_URL + "/filter")
                         .with(user(USERNAME))
-                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_INVALID_VALUE))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_INVALID_SIZE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.reason", is("Filter format is invalid")));
+                .andExpect(jsonPath("$.reason", is(INVALID_SIZE_FILTER_MESSAGE)));
+    }
+
+    @Test
+    @DisplayName("Should return 400 response with error detail when filter is blank")
+    public void findHeroByName_400_whenFilterBlank() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/filter")
+                        .with(user(USERNAME))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_BLANK))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.reason", is(BLANK_FILTER_MESSAGE)));
     }
 }
