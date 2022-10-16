@@ -27,6 +27,8 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(classes = HeroesServiceImpl.class)
 class HeroesServiceImplTest {
 
+    private static final UUID ID = UUID.fromString("b34d6c68-d9ee-42ea-aa39-71bc107fbd0b");
+
     @Autowired
     HeroesService service;
 
@@ -78,5 +80,12 @@ class HeroesServiceImplTest {
         assertThat(heroes).hasSize(2);
         then(repository).should(only()).findAll();
         then(mapper).should(times(2)).map(any());
+    }
+
+    @Test
+    @DisplayName("Should return hero domain object")
+    void findById_notEmpty() {
+        var optionalHero = service.findById(ID);
+        assertThat(optionalHero.isPresent()).isTrue();
     }
 }
