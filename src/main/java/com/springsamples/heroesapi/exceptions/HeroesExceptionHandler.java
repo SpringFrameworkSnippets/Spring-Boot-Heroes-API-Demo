@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.stream.Collectors;
+
+import static com.springsamples.heroesapi.exceptions.HeroesExceptionHandlerMessageBuilder.buildConstraintViolationMessage;
+import static com.springsamples.heroesapi.exceptions.HeroesExceptionHandlerMessageBuilder.buildTypeMismatchMessage;
 
 @RestControllerAdvice
 @Slf4j
@@ -26,9 +26,11 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorDto handleHeroNotFound(HeroNotFoundException ex) {
+        var message = ex.getMessage();
+        log.info(message);
         return ErrorDto.builder()
                 .code(HttpStatus.NOT_FOUND.value())
-                .reason(ex.getMessage())
+                .reason(message)
                 .build();
     }
 
@@ -36,26 +38,22 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorDto handleConstraintViolation(ConstraintViolationException ex) {
+        var message = buildConstraintViolationMessage(ex);
+        log.info(message);
         return ErrorDto.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
-                .reason(buildConstraintViolationMessage(ex))
+                .reason(message)
                 .build();
     }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        var invalidValue = ex.getValue();
-        var field = ((MethodArgumentTypeMismatchException) ex).getName();
-        var output = String.format("Invalid value %s for field %s", invalidValue, field);
-        log.info(output);
+        var message = buildTypeMismatchMessage(ex);
+        log.info(message);
         return ResponseEntity.badRequest()
                 .body(ErrorDto.builder()
                         .code(HttpStatus.BAD_REQUEST.value())
-                        .reason(output)
+                        .reason(message)
                         .build());
-    }
-
-    private String buildConstraintViolationMessage(ConstraintViolationException ex) {
-        return ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(". "));
     }
 }

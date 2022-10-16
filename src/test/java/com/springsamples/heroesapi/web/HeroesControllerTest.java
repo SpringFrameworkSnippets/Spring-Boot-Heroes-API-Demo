@@ -45,7 +45,7 @@ public class HeroesControllerTest {
     public static final String HERO_REQUEST_PARAM_INVALID_SIZE = "asdfghjklpoiuytrqshb123";
     public static final String HERO_REQUEST_PARAM_BLANK = "";
     public static final String INVALID_SIZE_FILTER_MESSAGE = "Filter length must be between 1 and 20";
-    public static final String BLANK_FILTER_MESSAGE = "Filter length must be between 1 and 20. Filter must not be blank";
+    public static final String BLANK_FILTER_MESSAGE = "Filter must not be blank";
 
     @Autowired
     private WebApplicationContext context;
@@ -221,6 +221,7 @@ public class HeroesControllerTest {
                         .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_BLANK))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.reason", is(BLANK_FILTER_MESSAGE)));
+                .andExpect(jsonPath("$.reason", containsStringIgnoringCase(INVALID_SIZE_FILTER_MESSAGE)))
+                .andExpect(jsonPath("$.reason", containsStringIgnoringCase(BLANK_FILTER_MESSAGE)));
     }
 }
