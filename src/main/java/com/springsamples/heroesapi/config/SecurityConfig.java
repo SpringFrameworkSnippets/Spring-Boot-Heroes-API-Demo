@@ -13,6 +13,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(Customizer.withDefaults())
                 .authorizeRequests(auth -> auth.anyRequest().authenticated())
+                .cors().and().csrf().disable()
                 .build();
     }
 }

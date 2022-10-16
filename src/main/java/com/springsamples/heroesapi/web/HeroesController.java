@@ -3,6 +3,7 @@ package com.springsamples.heroesapi.web;
 import com.springsamples.heroesapi.config.aspects.LogExecutionTime;
 import com.springsamples.heroesapi.exceptions.HeroNotFoundException;
 import com.springsamples.heroesapi.services.HeroesFacade;
+import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,10 @@ public class HeroesController {
                                           @RequestParam String name) {
         var heroesByName = facade.findByNameContains(name);
         return ResponseEntity.ok(heroesByName);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateHero(@RequestBody HeroDto dto) {
+        return ResponseEntity.noContent().build();
     }
 }
