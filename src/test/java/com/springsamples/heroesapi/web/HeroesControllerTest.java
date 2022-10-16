@@ -40,6 +40,8 @@ public class HeroesControllerTest {
     private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid value 0 for field id";
     private static final String NOT_FOUND_HERO_ID = "003c93c1-7958-4a55-81c0-c4dded1637fa";
     private static final String NOT_FOUND_HERO_MESSAGE = "Hero with id " + NOT_FOUND_HERO_ID + " not found";
+    public static final String HERO_REQUEST_PARAM_NAME = "name";
+    public static final String HERO_REQUEST_PARAM_VALUE = "man";
 
     @Autowired
     private WebApplicationContext context;
@@ -122,7 +124,7 @@ public class HeroesControllerTest {
     public void findHeroes_facadeInteraction() throws Exception {
         then(facade).shouldHaveNoInteractions();
         this.mockMvc.perform(get(BASE_URL)
-                .with(user(USERNAME)))
+                        .with(user(USERNAME)))
                 .andExpect(status().isOk());
         then(facade).should(only()).findAll();
     }
@@ -185,5 +187,14 @@ public class HeroesControllerTest {
                 .andExpect(jsonPath("$.reason", is(NOT_FOUND_HERO_MESSAGE)));
         then(facade).should(only()).findById(UUID.fromString(NOT_FOUND_HERO_ID));
         then(facade).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    @DisplayName("Should return 200 Ok response with query param")
+    public void findHeroByName_200() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/filter")
+                        .with(user(USERNAME))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_VALUE))
+                .andExpect(status().isOk());
     }
 }
