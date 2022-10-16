@@ -1,6 +1,7 @@
 package com.springsamples.heroesapi.web;
 
 import com.springsamples.heroesapi.config.aspects.LogExecutionTime;
+import com.springsamples.heroesapi.exceptions.HeroNotFoundException;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,6 @@ public class HeroesController {
     public ResponseEntity<?> hero(@PathVariable UUID id) {
         return facade.findById(id)
                 .map(ResponseEntity::ok)
-                //TODO add custom exception
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new HeroNotFoundException(id));
     }
 }

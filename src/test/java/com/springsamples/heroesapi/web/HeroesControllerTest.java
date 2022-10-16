@@ -39,6 +39,7 @@ public class HeroesControllerTest {
     private static final String INVALID_HERO_ID = "0";
     private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid value 0 for field id";
     private static final String NOT_FOUND_HERO_ID = "003c93c1-7958-4a55-81c0-c4dded1637fa";
+    private static final String NOT_FOUND_HERO_MESSAGE = "Hero with id " + NOT_FOUND_HERO_ID + " not found";
 
     @Autowired
     private WebApplicationContext context;
@@ -181,7 +182,7 @@ public class HeroesControllerTest {
                         .with(user(USERNAME)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code", is(HttpStatus.NOT_FOUND.value())))
-                .andExpect(jsonPath("$.reason", is("Hero with id " + NOT_FOUND_HERO_ID + "not found")));
+                .andExpect(jsonPath("$.reason", is(NOT_FOUND_HERO_MESSAGE)));
         then(facade).should(only()).findById(UUID.fromString(NOT_FOUND_HERO_ID));
         then(facade).shouldHaveNoMoreInteractions();
     }
