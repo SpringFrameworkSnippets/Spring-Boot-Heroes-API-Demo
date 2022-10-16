@@ -35,6 +35,8 @@ public class HeroesFacadeImpl implements HeroesFacade {
 
     @Override
     public List<HeroDto> findByNameContains(String name) {
-        return Collections.emptyList();
+        return service.findByNameContains(name).stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 }
