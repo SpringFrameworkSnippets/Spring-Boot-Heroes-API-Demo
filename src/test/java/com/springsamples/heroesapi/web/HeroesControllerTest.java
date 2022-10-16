@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
@@ -60,6 +62,13 @@ public class HeroesControllerTest {
                 HeroDto.builder()
                         .id(UUID.randomUUID())
                         .name("Superman")
+                        .build()
+        ));
+
+        given(facade.findById(ArgumentMatchers.any())).willReturn(Optional.of(
+                HeroDto.builder()
+                        .id(UUID.randomUUID())
+                        .name("Tracer")
                         .build()
         ));
     }
@@ -149,7 +158,7 @@ public class HeroesControllerTest {
 
     @Test
     @DisplayName("Should get hero by ID from facade")
-    public void findHeroeById_facadeInteraction() throws Exception {
+    public void findHeroById_facadeInteraction() throws Exception {
         then(facade).shouldHaveNoInteractions();
         this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,5 +167,6 @@ public class HeroesControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", notNullValue()));
         then(facade).should(only()).findById(UUID.fromString(VALID_HERO_ID));
+        then(facade).shouldHaveNoMoreInteractions();
     }
 }

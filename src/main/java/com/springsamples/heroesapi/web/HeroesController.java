@@ -30,10 +30,9 @@ public class HeroesController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> hero(@PathVariable UUID id) {
-        var hero = HeroDto.builder()
-                .id(UUID.randomUUID())
-                .name("Batman")
-                .build();
-        return ResponseEntity.ok(hero);
+        return facade.findById(id)
+                .map(ResponseEntity::ok)
+                //TODO add custom exception
+                .orElseThrow(RuntimeException::new);
     }
 }
