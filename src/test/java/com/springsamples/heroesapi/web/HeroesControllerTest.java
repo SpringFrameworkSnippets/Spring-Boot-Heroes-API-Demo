@@ -35,6 +35,7 @@ public class HeroesControllerTest {
     private static final String USERNAME = "TEST";
     private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
     private static final String INVALID_HERO_ID = "0";
+    private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid ID format";
 
     @Autowired
     private WebApplicationContext context;
@@ -131,7 +132,7 @@ public class HeroesControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(USERNAME)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST)))
-                .andExpect(jsonPath("$.reason", is("Invalid ID format")));
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.reason", is(INVALID_ID_FORMAT_MESSAGE)));
     }
 }
