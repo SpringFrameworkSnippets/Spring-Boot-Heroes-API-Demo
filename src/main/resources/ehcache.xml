@@ -6,6 +6,7 @@
     </service>
 
     <cache alias="heroesCache" uses-template="config-cache"/>
+    <cache alias="heroCache" uses-template="config-cache"/>
 
     <cache-template name="config-cache">
         <expiry>

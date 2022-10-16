@@ -30,6 +30,7 @@ public class HeroesController {
     }
 
     @GetMapping("/{id}")
+    @LogExecutionTime
     public ResponseEntity<?> hero(@PathVariable UUID id) {
         return facade.findById(id)
                 .map(ResponseEntity::ok)

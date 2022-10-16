@@ -26,6 +26,7 @@ public class HeroesFacadeImpl implements HeroesFacade {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(cacheNames = "heroCache", key = "#id")
     @Override
     public Optional<HeroDto> findById(UUID id) {
         return service.findById(id).map(mapper::map);
