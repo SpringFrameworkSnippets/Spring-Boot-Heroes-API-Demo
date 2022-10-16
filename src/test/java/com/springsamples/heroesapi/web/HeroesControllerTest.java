@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class HeroesControllerTest {
 
     private static final String USERNAME = "TEST";
+    private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
 
     @Autowired
     private WebApplicationContext context;
@@ -115,7 +116,7 @@ public class HeroesControllerTest {
     @Test
     @DisplayName("Should return 200 OK response with ID param")
     public void findHeroById_200() throws Exception {
-        this.mockMvc.perform(get(BASE_URL + "/{id}", "1")
+        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
                         .with(user(USERNAME)))
                 .andExpect(status().isOk());
 
