@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +35,8 @@ public class HeroesControllerIT {
 
     private static final String USERNAME = "TEST";
     private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
+    public static final String HERO_REQUEST_PARAM_NAME = "name";
+    public static final String HERO_REQUEST_PARAM_VALUE = "man";
 
     @Autowired
     private WebApplicationContext context;
@@ -83,5 +86,21 @@ public class HeroesControllerIT {
         var dto = objectMapper.readValue(contentAsString, HeroDto.class);
         assertThat(dto).isNotNull();
         assertThat(dto.getId()).isEqualTo(UUID.fromString(VALID_HERO_ID));
+    }
+
+    @Test
+    @DisplayName("Should get 200 OK response with hero matching filter name")
+    public void findHeroByName() throws Exception {
+        MvcResult result = this.mockMvc.perform(get(BASE_URL + "/filter")
+                        .with(user(USERNAME))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String contentAsString = result.getResponse().getContentAsString();
+        var heroes = objectMapper.readValue(contentAsString, new TypeReference<List<HeroDto>>() {});
+        assertThat(heroes).hasSize(2);
+        assertThat(heroes.stream().map(HeroDto::getName).collect(Collectors.toList())).isEqualTo(List.of("Batman", "Superman"));
     }
 }

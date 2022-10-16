@@ -1,0 +1,2 @@
+INSERT INTO HEROES (id, name) VALUES ('f9f20736-4d94-11ed-bdc3-0242ac120002','Tracer');
+INSERT INTO HEROES (id, name) VALUES ('0e112288-4d95-11ed-bdc3-0242ac120002','Soldier');

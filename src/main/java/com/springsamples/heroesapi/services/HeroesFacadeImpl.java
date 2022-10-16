@@ -33,6 +33,7 @@ public class HeroesFacadeImpl implements HeroesFacade {
         return service.findById(id).map(mapper::map);
     }
 
+    @Cacheable(cacheNames = "heroByNameCache", key = "#name")
     @Override
     public List<HeroDto> findByNameContains(String name) {
         return service.findByNameContains(name).stream()
