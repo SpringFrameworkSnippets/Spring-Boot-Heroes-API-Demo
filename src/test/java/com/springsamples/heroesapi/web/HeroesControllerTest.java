@@ -79,6 +79,13 @@ public class HeroesControllerTest {
                         .name("Tracer")
                         .build()
         ));
+
+        given(facade.findByNameContains(ArgumentMatchers.any())).willReturn(List.of(
+                HeroDto.builder()
+                        .id(UUID.randomUUID())
+                        .name("He-Man")
+                        .build()
+        ));
     }
 
     @AfterEach
@@ -223,5 +230,19 @@ public class HeroesControllerTest {
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.reason", containsStringIgnoringCase(INVALID_SIZE_FILTER_MESSAGE)))
                 .andExpect(jsonPath("$.reason", containsStringIgnoringCase(BLANK_FILTER_MESSAGE)));
+    }
+
+    @Test
+    @DisplayName("Should get hero by name from facade")
+    public void findHeroByName_facadeInteraction() throws Exception {
+        then(facade).shouldHaveNoInteractions();
+        this.mockMvc.perform(get(BASE_URL + "/filter")
+                        .with(user(USERNAME))
+                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", notNullValue()));
+        then(facade).should(only()).findByNameContains(HERO_REQUEST_PARAM_VALUE);
+        then(facade).shouldHaveNoMoreInteractions();
     }
 }

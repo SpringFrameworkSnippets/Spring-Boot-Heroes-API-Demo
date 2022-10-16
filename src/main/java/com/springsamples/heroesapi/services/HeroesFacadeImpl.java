@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,5 +31,10 @@ public class HeroesFacadeImpl implements HeroesFacade {
     @Override
     public Optional<HeroDto> findById(UUID id) {
         return service.findById(id).map(mapper::map);
+    }
+
+    @Override
+    public List<HeroDto> findByNameContains(String name) {
+        return Collections.emptyList();
     }
 }
