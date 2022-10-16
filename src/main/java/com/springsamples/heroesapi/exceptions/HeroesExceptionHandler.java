@@ -14,17 +14,29 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @Slf4j
 public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({ HeroNotFoundException.class})
+    @ExceptionHandler({HeroNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorDto handleHeroNotFound(HeroNotFoundException ex) {
         return ErrorDto.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .reason(ex.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler({ ConstraintViolationException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorDto handleConstraintViolation(ConstraintViolationException ex) {
+        return ErrorDto.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .reason("Filter format is invalid")
                 .build();
     }
 
