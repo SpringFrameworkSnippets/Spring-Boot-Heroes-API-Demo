@@ -15,7 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
                 "spring.jpa.hibernate.ddl-auto=create"})
 class HeroesRepositoryJpaImplTest {
 
-    private static final String NAME = "Batman";
+    private static final String BATMAN = "Batman";
+    private static final String SOLDIER = "Soldier";
+    private static final String FILTER_NAME = "man";
 
     @Autowired
     private HeroesRepository repository;
@@ -23,21 +25,44 @@ class HeroesRepositoryJpaImplTest {
     @Autowired
     TestEntityManager testEntityManager;
 
+    private HeroEntity savedHeroEntity;
+
     @BeforeEach
     void beforeEach() {
+        savedHeroEntity = testEntityManager.persistAndFlush(
+                HeroEntity.builder()
+                        .name(BATMAN)
+                        .build());
+
         testEntityManager.persistAndFlush(
                 HeroEntity.builder()
-                        .name(NAME)
+                        .name(SOLDIER)
                         .build());
     }
 
     @Test
-    @DisplayName("Should retrieve persisted hero entity")
+    @DisplayName("Should retrieve hero entity list")
     void findAll() {
         var heroes = repository.findAll();
         assertThat(heroes).isNotEmpty();
-        heroes.stream().findFirst().ifPresentOrElse((hero) ->
-                        assertThat(hero.getName()).isEqualTo(NAME),
-                RuntimeException::new);
+        assertThat(heroes).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("Should retrieve hero entity by ID")
+    void findById() {
+        repository.findById(savedHeroEntity.getId())
+                .ifPresent((hero) -> assertThat(hero.getId())
+                        .isEqualTo(savedHeroEntity.getId()));
+    }
+
+    @Test
+    @DisplayName("Should retrieve hero list filtered by name")
+    void findByName() {
+        var heroes = repository.findByNameContains(FILTER_NAME);
+        assertThat(heroes).isNotEmpty();
+        heroes.stream()
+                .filter(h -> h.getName().contains(FILTER_NAME))
+                .findFirst().ifPresent((hero) -> assertThat(hero.getName()).isEqualTo(BATMAN));
     }
 }
