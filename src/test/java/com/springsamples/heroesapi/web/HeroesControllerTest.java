@@ -35,7 +35,7 @@ public class HeroesControllerTest {
     private static final String USERNAME = "TEST";
     private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
     private static final String INVALID_HERO_ID = "0";
-    private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid ID format";
+    private static final String INVALID_ID_FORMAT_MESSAGE = "Invalid value 0 for field id";
 
     @Autowired
     private WebApplicationContext context;
