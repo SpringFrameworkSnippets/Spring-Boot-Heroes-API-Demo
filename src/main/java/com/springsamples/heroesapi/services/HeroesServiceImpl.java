@@ -6,6 +6,7 @@ import com.springsamples.heroesapi.repositories.HeroesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,5 +30,10 @@ public class HeroesServiceImpl implements HeroesService {
     public Optional<Hero> findById(UUID id) {
         return repository.findById(id)
                 .map(mapper::map);
+    }
+
+    @Override
+    public List<Hero> findByNameContains(String name) {
+        return Collections.emptyList();
     }
 }

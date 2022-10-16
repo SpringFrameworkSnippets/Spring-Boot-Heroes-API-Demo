@@ -22,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @ContextConfiguration( classes = {HeroesFacadeImpl.class})
@@ -55,6 +54,17 @@ class HeroesFacadeImplTest {
                 Hero.builder()
                         .id(UUID.randomUUID())
                         .name("Tracer")
+                        .build()
+        ));
+
+        given(service.findByNameContains(any())).willReturn(List.of(
+                Hero.builder()
+                        .id(UUID.randomUUID())
+                        .name("Batman")
+                        .build(),
+                Hero.builder()
+                        .id(UUID.randomUUID())
+                        .name("Superman")
                         .build()
         ));
 
@@ -111,6 +121,20 @@ class HeroesFacadeImplTest {
         then(mapper).should(only()).map(any());
         then(mapper).shouldHaveNoMoreInteractions();
         then(service).should(only()).findById(any());
-        then(service).shouldHaveNoMoreInteractions();;
+        then(service).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    @DisplayName("Should get heroes domain objects by name filter from service")
+    void findByName_withServiceInteraction() {
+        then(service).shouldHaveNoInteractions();
+        then(mapper).shouldHaveNoInteractions();
+        var heroesByName = facade.findByNameContains("man");
+        assertThat(heroesByName).isNotEmpty();
+        assertThat(heroesByName).hasSize(2);
+        then(mapper).should(times(2)).map(any());
+        then(mapper).shouldHaveNoMoreInteractions();
+        then(service).should(only()).findByNameContains("man");
+        then(service).shouldHaveNoMoreInteractions();
     }
 }

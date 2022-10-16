@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface HeroesService {
     List<Hero> findAll();
     Optional<Hero> findById(UUID id);
+    List<Hero> findByNameContains(String name);
 }
