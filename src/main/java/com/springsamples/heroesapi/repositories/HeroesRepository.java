@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface HeroesRepository {
     List<HeroEntity> findAll();
     Optional<HeroEntity> findById(UUID id);
+    List<HeroEntity> findByNameContains(String name);
 }

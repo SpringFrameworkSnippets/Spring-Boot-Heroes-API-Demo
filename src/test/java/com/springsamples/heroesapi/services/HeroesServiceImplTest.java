@@ -59,9 +59,20 @@ class HeroesServiceImplTest {
                         .build()
         ));
 
+        given(repository.findByNameContains(any())).willReturn(List.of(
+                HeroEntity.builder()
+                        .id(UUID.randomUUID())
+                        .name("Batman")
+                        .build(),
+                HeroEntity.builder()
+                        .id(UUID.randomUUID())
+                        .name("Superman")
+                        .build()
+        ));
+
         given(mapper.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
-                .name("domain")
+                .name("Batman")
                 .build());
     }
 
@@ -111,5 +122,18 @@ class HeroesServiceImplTest {
         then(repository).shouldHaveNoMoreInteractions();
         assertThat(optionalHero.isPresent()).isTrue();
         optionalHero.ifPresent((hero) -> assertThat(hero.getId()).isEqualTo(ID));
+    }
+
+    @Test
+    @DisplayName("Should get hero list from repository by name filter")
+    void findByName_withRepoInteraction() {
+        then(repository).shouldHaveNoMoreInteractions();
+        then(mapper).shouldHaveNoMoreInteractions();
+        var heroesByName = service.findByNameContains("man");
+        then(repository).should(only()).findByNameContains("man");
+        then(repository).shouldHaveNoMoreInteractions();
+        then(mapper).should(times(2)).map(any());
+        assertThat(heroesByName).isNotEmpty();
+        assertThat(heroesByName).hasSize(2);
     }
 }

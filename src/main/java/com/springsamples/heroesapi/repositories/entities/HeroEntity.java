@@ -24,7 +24,7 @@ public class HeroEntity {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false, name = "id")
     private UUID id;
     @Column(nullable = false)
     private String name;
