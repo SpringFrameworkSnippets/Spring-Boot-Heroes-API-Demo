@@ -34,6 +34,8 @@ public class HeroesServiceImpl implements HeroesService {
 
     @Override
     public List<Hero> findByNameContains(String name) {
-        return Collections.emptyList();
+        return repository.findByNameContains(name).stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 }
