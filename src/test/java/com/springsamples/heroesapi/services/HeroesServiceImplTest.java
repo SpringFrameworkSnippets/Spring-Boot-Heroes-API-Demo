@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +49,13 @@ class HeroesServiceImplTest {
                 HeroEntity.builder()
                         .id(UUID.randomUUID())
                         .name("Superman")
+                        .build()
+        ));
+
+        given(repository.findById(any())).willReturn(Optional.of(
+                HeroEntity.builder()
+                        .id(ID)
+                        .name("Tracer")
                         .build()
         ));
 
@@ -87,5 +95,21 @@ class HeroesServiceImplTest {
     void findById_notEmpty() {
         var optionalHero = service.findById(ID);
         assertThat(optionalHero.isPresent()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should get hero entity from repository by ID")
+    void findById_notEmpty_withRepoInteraction() {
+        given(mapper.map(any())).willReturn(
+                Hero.builder()
+                        .id(ID)
+                        .name("Reaper")
+                        .build());
+        then(repository).shouldHaveNoInteractions();
+        var optionalHero = service.findById(ID);
+        then(repository).should(only()).findById(ID);
+        then(repository).shouldHaveNoMoreInteractions();
+        assertThat(optionalHero.isPresent()).isTrue();
+        optionalHero.ifPresent((hero) -> assertThat(hero.getId()).isEqualTo(ID));
     }
 }

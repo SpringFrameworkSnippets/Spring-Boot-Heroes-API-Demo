@@ -27,9 +27,7 @@ public class HeroesServiceImpl implements HeroesService {
 
     @Override
     public Optional<Hero> findById(UUID id) {
-        return Optional.of(Hero.builder()
-                .id(id)
-                .name("Batman")
-                .build());
+        return repository.findById(id)
+                .map(mapper::map);
     }
 }
