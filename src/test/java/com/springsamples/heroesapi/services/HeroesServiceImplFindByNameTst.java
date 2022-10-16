@@ -52,7 +52,7 @@ public class HeroesServiceImplFindByNameTst {
 
         given(mapper.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
-                .name(FILTER_NAME)
+                .name(FILTER_PARAM_VALUE)
                 .build());
     }
 
@@ -67,13 +67,13 @@ public class HeroesServiceImplFindByNameTst {
     void findByName_withRepoInteraction() {
         then(repository).shouldHaveNoMoreInteractions();
         then(mapper).shouldHaveNoMoreInteractions();
-        var heroesByName = service.findByNameContains(FILTER_NAME);
-        then(repository).should(only()).findByNameContains(FILTER_NAME);
+        var heroesByName = service.findByNameContains(FILTER_PARAM_VALUE);
+        then(repository).should(only()).findByNameContains(FILTER_PARAM_VALUE);
         then(repository).shouldHaveNoMoreInteractions();
         then(mapper).should(times(2)).map(any());
         assertThat(heroesByName).isNotEmpty();
         assertThat(heroesByName.stream()
-                .filter(h -> h.getName().contains(FILTER_NAME))
+                .filter(h -> h.getName().contains(FILTER_PARAM_VALUE))
                 .count())
                 .isEqualTo(2);
     }

@@ -19,24 +19,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.springsamples.heroesapi.constants.Test.*;
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.emptyString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @Tag("Integration")
 @SpringBootTest
 public class HeroesControllerIT {
-
-    private static final String USERNAME = "TEST";
-    private static final String VALID_HERO_ID = "b34d6c68-d9ee-42ea-aa39-71bc107fbd0b";
-    public static final String HERO_REQUEST_PARAM_NAME = "name";
-    public static final String HERO_REQUEST_PARAM_VALUE = "man";
 
     @Autowired
     private WebApplicationContext context;
@@ -93,7 +87,7 @@ public class HeroesControllerIT {
     public void findHeroByName() throws Exception {
         MvcResult result = this.mockMvc.perform(get(BASE_URL + "/filter")
                         .with(user(USERNAME))
-                        .queryParam(HERO_REQUEST_PARAM_NAME, HERO_REQUEST_PARAM_VALUE))
+                        .queryParam(FILTER_PARAM_NAME, FILTER_PARAM_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -101,6 +95,8 @@ public class HeroesControllerIT {
         String contentAsString = result.getResponse().getContentAsString();
         var heroes = objectMapper.readValue(contentAsString, new TypeReference<List<HeroDto>>() {});
         assertThat(heroes).hasSize(2);
-        assertThat(heroes.stream().map(HeroDto::getName).collect(Collectors.toList())).isEqualTo(List.of("Batman", "Superman"));
+        assertThat(heroes.stream().map(HeroDto::getName)
+                .collect(Collectors.toList()))
+                .isEqualTo(List.of(BATMAN, SUPERMAN));
     }
 }

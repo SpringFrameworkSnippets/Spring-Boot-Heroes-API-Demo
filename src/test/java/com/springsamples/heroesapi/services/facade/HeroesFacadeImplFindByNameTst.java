@@ -70,12 +70,12 @@ public class HeroesFacadeImplFindByNameTst {
     void findByName_withServiceInteraction() {
         then(service).shouldHaveNoInteractions();
         then(mapper).shouldHaveNoInteractions();
-        var heroesByName = facade.findByNameContains(FILTER_NAME);
+        var heroesByName = facade.findByNameContains(FILTER_PARAM_VALUE);
         assertThat(heroesByName).isNotEmpty();
         assertThat(heroesByName).hasSize(2);
         then(mapper).should(times(2)).map(any());
         then(mapper).shouldHaveNoMoreInteractions();
-        then(service).should(only()).findByNameContains(FILTER_NAME);
+        then(service).should(only()).findByNameContains(FILTER_PARAM_VALUE);
         then(service).shouldHaveNoMoreInteractions();
     }
 }
