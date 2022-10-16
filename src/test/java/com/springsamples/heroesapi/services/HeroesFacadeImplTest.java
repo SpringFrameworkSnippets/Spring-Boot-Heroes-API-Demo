@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,9 +84,25 @@ class HeroesFacadeImplTest {
     }
 
     @Test
-    @DisplayName("Should get hero domain by ID from service")
-    void findById() {
+    @DisplayName("Should get hero domain by ID")
+    void findById_notNull() {
         var optionalHeroDTO = facade.findById(UUID.randomUUID());
         assertThat(optionalHeroDTO.isPresent()).isTrue();
+    }
+
+    @Test
+    void findById_notNull_serviceInteraction() {
+        var id = UUID.randomUUID();
+        then(service).shouldHaveNoInteractions();
+        given(service.findById(any())).willReturn(Optional.of(
+                Hero.builder()
+                        .id(id)
+                        .name("Batman")
+                        .build()
+        ));
+        var optionalHeroDTO = facade.findById(id);
+        assertThat(optionalHeroDTO.isPresent()).isTrue();
+        then(service).should(only()).findById(id);
+        then(service).shouldHaveNoMoreInteractions();
     }
 }

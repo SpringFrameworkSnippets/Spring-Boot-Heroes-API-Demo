@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,10 +17,16 @@ public class HeroesServiceImpl implements HeroesService {
 
     private final HeroesRepository repository;
     private final IHeroMapperEntityToDomain mapper;
+
     @Override
     public List<Hero> findAll() {
         return repository.findAll().stream()
                 .map(mapper::map)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Hero> findById(UUID id) {
+        return Optional.empty();
     }
 }
