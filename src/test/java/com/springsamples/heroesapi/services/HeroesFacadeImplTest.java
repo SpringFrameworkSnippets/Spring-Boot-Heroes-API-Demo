@@ -81,4 +81,11 @@ class HeroesFacadeImplTest {
         assertThat(heroes).isNotEmpty();
         assertThat(heroes).hasSize(2);
     }
+
+    @Test
+    @DisplayName("Should get hero domain by ID from service")
+    void findById() {
+        var optionalHeroDTO = facade.findById(UUID.randomUUID());
+        assertThat(optionalHeroDTO.isPresent()).isTrue();
+    }
 }
