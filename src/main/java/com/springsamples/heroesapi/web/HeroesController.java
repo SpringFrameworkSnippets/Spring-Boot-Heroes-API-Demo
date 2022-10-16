@@ -43,6 +43,7 @@ public class HeroesController {
                                           @NotBlank(message = "Filter must not be blank")
                                           @Length(min = 1, max = 20, message = "Filter length must be between 1 and 20")
                                           @RequestParam String name) {
-        return ResponseEntity.ok().build();
+        var heroesByName = facade.findByNameContains(name);
+        return ResponseEntity.ok(heroesByName);
     }
 }
