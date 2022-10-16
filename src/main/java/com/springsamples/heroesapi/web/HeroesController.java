@@ -2,6 +2,7 @@ package com.springsamples.heroesapi.web;
 
 import com.springsamples.heroesapi.config.aspects.LogExecutionTime;
 import com.springsamples.heroesapi.services.HeroesFacade;
+import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,10 @@ public class HeroesController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> hero(@PathVariable UUID id) {
-        return ResponseEntity.ok().build();
+        var hero = HeroDto.builder()
+                .id(UUID.randomUUID())
+                .name("Batman")
+                .build();
+        return ResponseEntity.ok(hero);
     }
 }
