@@ -50,6 +50,14 @@ class HeroesFacadeImplTest {
                         .name("Superman")
                         .build()
         ));
+
+        given(service.findById(any())).willReturn(Optional.of(
+                Hero.builder()
+                        .id(UUID.randomUUID())
+                        .name("Tracer")
+                        .build()
+        ));
+
         // Here we are not testing mapping logic,
         // so we don't care about the outcome of this computation
         given(mapper.map(any())).willReturn(HeroDto.builder()
@@ -92,17 +100,17 @@ class HeroesFacadeImplTest {
 
     @Test
     void findById_notNull_serviceInteraction() {
-        var id = UUID.randomUUID();
         then(service).shouldHaveNoInteractions();
-        given(service.findById(any())).willReturn(Optional.of(
-                Hero.builder()
-                        .id(id)
-                        .name("Batman")
-                        .build()
-        ));
-        var optionalHeroDTO = facade.findById(id);
+        then(mapper).shouldHaveNoInteractions();
+        var optionalHeroDTO = facade.findById(UUID.randomUUID());
         assertThat(optionalHeroDTO.isPresent()).isTrue();
-        then(service).should(only()).findById(id);
-        then(service).shouldHaveNoMoreInteractions();
+        optionalHeroDTO.ifPresent((hero) -> {
+            assertThat(hero.getId()).isNotNull();
+            assertThat(hero.getName()).isNotEmpty();
+        });
+        then(mapper).should(only()).map(any());
+        then(mapper).shouldHaveNoMoreInteractions();
+        then(service).should(only()).findById(any());
+        then(service).shouldHaveNoMoreInteractions();;
     }
 }
