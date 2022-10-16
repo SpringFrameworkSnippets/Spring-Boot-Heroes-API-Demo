@@ -6,6 +6,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,6 +55,15 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ErrorDto.builder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .reason(message)
+                        .build());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return ResponseEntity.badRequest()
+                .body(ErrorDto.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .reason("Invalid Hero")
                         .build());
     }
 }

@@ -50,7 +50,7 @@ public class HeroesController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateHero(@RequestBody HeroDto dto) {
+    public ResponseEntity<?> updateHero(@Valid @RequestBody HeroDto dto) {
         return ResponseEntity.noContent().build();
     }
 }
