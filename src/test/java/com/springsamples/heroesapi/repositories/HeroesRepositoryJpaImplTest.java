@@ -1,68 +1,44 @@
 package com.springsamples.heroesapi.repositories;
 
-import com.springsamples.heroesapi.repositories.entities.HeroEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.UUID;
+
+import static com.springsamples.heroesapi.constants.Test.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest(properties =
-        {"spring.flyway.enabled=false",
-                "spring.jpa.hibernate.ddl-auto=create"})
+@DataJpaTest
 class HeroesRepositoryJpaImplTest {
-
-    private static final String BATMAN = "Batman";
-    private static final String SOLDIER = "Soldier";
-    private static final String FILTER_NAME = "man";
 
     @Autowired
     private HeroesRepository repository;
-
-    @Autowired
-    TestEntityManager testEntityManager;
-
-    private HeroEntity savedHeroEntity;
-
-    @BeforeEach
-    void beforeEach() {
-        savedHeroEntity = testEntityManager.persistAndFlush(
-                HeroEntity.builder()
-                        .name(BATMAN)
-                        .build());
-
-        testEntityManager.persistAndFlush(
-                HeroEntity.builder()
-                        .name(SOLDIER)
-                        .build());
-    }
 
     @Test
     @DisplayName("Should retrieve hero entity list")
     void findAll() {
         var heroes = repository.findAll();
         assertThat(heroes).isNotEmpty();
-        assertThat(heroes).hasSize(2);
+        assertThat(heroes).hasSize(4);
     }
 
     @Test
     @DisplayName("Should retrieve hero entity by ID")
     void findById() {
-        repository.findById(savedHeroEntity.getId())
+        repository.findById(UUID.fromString(VALID_HERO_ID))
                 .ifPresent((hero) -> assertThat(hero.getId())
-                        .isEqualTo(savedHeroEntity.getId()));
+                        .isEqualTo(UUID.fromString(VALID_HERO_ID)));
     }
 
     @Test
     @DisplayName("Should retrieve hero list filtered by name")
     void findByName() {
-        var heroes = repository.findByNameContains(FILTER_NAME);
+        var heroes = repository.findByNameContains(FILTER_PARAM_VALUE);
         assertThat(heroes).isNotEmpty();
         heroes.stream()
-                .filter(h -> h.getName().contains(FILTER_NAME))
+                .filter(h -> h.getName().contains(FILTER_PARAM_VALUE))
                 .findFirst().ifPresent((hero) -> assertThat(hero.getName()).isEqualTo(BATMAN));
     }
 }
