@@ -135,4 +135,15 @@ public class HeroesControllerTest {
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.reason", is(INVALID_ID_FORMAT_MESSAGE)));
     }
+
+    @Test
+    @DisplayName("Should find a hero when ID is valid, and return a 200 code response")
+    public void findHeroById_200_NotNull() throws Exception {
+        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", notNullValue()));
+    }
 }
