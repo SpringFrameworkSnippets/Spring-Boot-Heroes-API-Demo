@@ -3,13 +3,14 @@ package com.springsamples.heroesapi.services;
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
 import com.springsamples.heroesapi.repositories.HeroesRepository;
+import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,21 +22,27 @@ public class HeroesServiceImpl implements HeroesService {
 
     @Override
     public List<Hero> findAll() {
-        return repository.findAll().stream()
-                .map(mapper::map)
-                .collect(Collectors.toList());
+        return toDomain(repository.findAll());
     }
 
     @Override
     public Optional<Hero> findById(UUID id) {
         return repository.findById(id)
-                .map(mapper::map);
+                .map(mapping());
     }
 
     @Override
     public List<Hero> findByNameContains(String name) {
-        return repository.findByNameContains(name).stream()
-                .map(mapper::map)
+        return toDomain(repository.findByNameContains(name));
+    }
+
+    private Function<HeroEntity, Hero> mapping() {
+        return mapper::map;
+    }
+
+    private List<Hero> toDomain(List<HeroEntity> entities) {
+        return entities.stream()
+                .map(mapping())
                 .collect(Collectors.toList());
     }
 }

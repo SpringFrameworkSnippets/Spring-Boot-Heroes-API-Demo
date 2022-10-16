@@ -39,6 +39,7 @@ public class HeroesController {
     }
 
     @GetMapping("/filter")
+    @LogExecutionTime
     public ResponseEntity<?> heroesByName(@Valid
                                           @NotBlank(message = "Filter must not be blank")
                                           @Length(min = 1, max = 20, message = "Filter length must be between 1 and 20")
