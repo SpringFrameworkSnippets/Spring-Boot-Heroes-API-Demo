@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HeroMapperDomainToDtoMapStructImpl.class, HeroMapperEntityToDomainMapStructImpl.class})
+@ContextConfiguration(classes = {HeroMapperDomainToDtoMapStructImpl.class, HeroMapperEntityToDomainMapStructImpl.class, HeroMapperDtoToDomainMapStructImpl.class})
 public class HeroesMapperTest {
 
     private static final UUID ID = UUID.randomUUID();
