@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +41,5 @@ public class HeroesFacadeImpl implements HeroesFacade {
     }
 
     @Override
-    public int updateHero(HeroDto dto) {
-        return 0;
-    }
+    public void updateHero(HeroDto dto) {}
 }

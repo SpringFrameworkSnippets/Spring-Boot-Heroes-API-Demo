@@ -6,6 +6,7 @@ import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,10 @@ public class HeroesController {
     @PutMapping
     @LogExecutionTime
     public ResponseEntity<?> updateHero(@Valid @RequestBody HeroDto dto) {
-        return ResponseEntity.noContent().build();
+        facade.updateHero(dto);
+        var location = String.format(BASE_URL + "/%s", dto.getId().toString());
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.LOCATION,location)
+                .build();
     }
 }
