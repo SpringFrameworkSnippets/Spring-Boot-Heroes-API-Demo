@@ -15,6 +15,9 @@ public class HeroesServiceCommandImpl implements HeroesServiceCommand {
 
     @Override
     public void updateHero(Hero hero) {
-        repository.update(mapper.map(hero));
+        int result = repository.update(mapper.map(hero));
+        if(result < 1) {
+            throw new RuntimeException("Update fails");
+        }
     }
 }
