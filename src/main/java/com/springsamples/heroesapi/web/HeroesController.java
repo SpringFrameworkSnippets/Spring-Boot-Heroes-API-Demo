@@ -59,4 +59,10 @@ public class HeroesController {
                 .header(HttpHeaders.LOCATION,location)
                 .build();
     }
+
+    @DeleteMapping
+    @LogExecutionTime
+    public ResponseEntity<?> deleteHero(@PathVariable UUID id) {
+        return ResponseEntity.accepted().build();
+    }
 }
