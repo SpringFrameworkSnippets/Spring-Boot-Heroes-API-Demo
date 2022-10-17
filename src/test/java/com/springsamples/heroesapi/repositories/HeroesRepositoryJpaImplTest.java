@@ -27,9 +27,9 @@ class HeroesRepositoryJpaImplTest {
     @Test
     @DisplayName("Should retrieve hero entity by ID")
     void findById() {
-        repository.findById(UUID.fromString(VALID_HERO_ID))
+        repository.findById(UUID.fromString(BATMAN_VALID_HERO_ID))
                 .ifPresent((hero) -> assertThat(hero.getId())
-                        .isEqualTo(UUID.fromString(VALID_HERO_ID)));
+                        .isEqualTo(UUID.fromString(BATMAN_VALID_HERO_ID)));
     }
 
     @Test

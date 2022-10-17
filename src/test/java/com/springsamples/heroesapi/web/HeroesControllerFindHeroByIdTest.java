@@ -66,7 +66,7 @@ public class HeroesControllerFindHeroByIdTest {
     @Test
     @DisplayName("Should return 200 OK response with ID param")
     public void findHeroById_200() throws Exception {
-        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
+        this.mockMvc.perform(get(BASE_URL + "/{id}", BATMAN_VALID_HERO_ID)
                         .with(user(USERNAME)))
                 .andExpect(status().isOk());
 
@@ -86,7 +86,7 @@ public class HeroesControllerFindHeroByIdTest {
     @Test
     @DisplayName("Should find a hero when ID is valid, and return a 200 code response")
     public void findHeroById_200_NotNull() throws Exception {
-        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
+        this.mockMvc.perform(get(BASE_URL + "/{id}", BATMAN_VALID_HERO_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(USERNAME)))
                 .andExpect(status().isOk())
@@ -98,13 +98,13 @@ public class HeroesControllerFindHeroByIdTest {
     @DisplayName("Should get hero by ID from facade")
     public void findHeroById_facadeInteraction() throws Exception {
         then(facade).shouldHaveNoInteractions();
-        this.mockMvc.perform(get(BASE_URL + "/{id}", VALID_HERO_ID)
+        this.mockMvc.perform(get(BASE_URL + "/{id}", BATMAN_VALID_HERO_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(USERNAME)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", notNullValue()));
-        then(facade).should(only()).findById(UUID.fromString(VALID_HERO_ID));
+        then(facade).should(only()).findById(UUID.fromString(BATMAN_VALID_HERO_ID));
         then(facade).shouldHaveNoMoreInteractions();
     }
 

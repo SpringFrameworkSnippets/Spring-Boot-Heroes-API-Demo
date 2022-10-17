@@ -10,7 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
-import static com.springsamples.heroesapi.constants.Test.VALID_HERO_ID;
+import static com.springsamples.heroesapi.constants.Test.BATMAN_VALID_HERO_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -25,7 +25,7 @@ class HeroesRepositoryCommandImplTest {
     @BeforeEach
     void beforeEach() {
         entity = HeroEntity.builder()
-                .id(UUID.fromString(VALID_HERO_ID))
+                .id(UUID.fromString(BATMAN_VALID_HERO_ID))
                 .name("Robin")
                 .build();
     }
