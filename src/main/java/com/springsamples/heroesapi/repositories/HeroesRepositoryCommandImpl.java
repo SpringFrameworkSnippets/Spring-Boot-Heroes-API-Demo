@@ -11,16 +11,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class HeroesRepositoryCommandImpl implements HeroesRepositoryCommand {
 
+    private static final String UPDATE_HERO_QUERY = "update HEROES set name = ? where id = ?";
+    private static final String DELETE_HERO_QUERY = "delete from HEROES where id = ?";
     private final JdbcTemplate template;
 
     @Override
     public int update(HeroEntity entity) {
-        String query = "update HEROES set name = ? where id = ?";
-        return template.update(query, entity.getName(), entity.getId().toString());
+        return template.update(UPDATE_HERO_QUERY, entity.getName(), entity.getId().toString());
     }
 
     @Override
     public int delete(UUID id) {
-        return 0;
+        return template.update(DELETE_HERO_QUERY, id.toString());
     }
 }
