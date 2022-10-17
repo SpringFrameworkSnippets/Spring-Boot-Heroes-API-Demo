@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.springsamples.heroesapi.constants.Web.HEROES_CACHE;
+
 @Service
 @RequiredArgsConstructor
 public class HeroesFacadeImpl implements HeroesFacade {
-
-    private static final List<String> HEROES_CACHE = List.of("heroesCache", "heroCache", "heroByNameCache");
     private final HeroesServiceQuery serviceQuery;
     private final HeroesServiceCommand serviceCommand;
     private final CacheService cacheService;
