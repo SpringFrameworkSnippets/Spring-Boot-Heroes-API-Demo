@@ -7,6 +7,8 @@ import com.springsamples.heroesapi.repositories.HeroesRepositoryCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class HeroesServiceCommandImpl implements HeroesServiceCommand {
@@ -20,5 +22,10 @@ public class HeroesServiceCommandImpl implements HeroesServiceCommand {
         if(result < 1) {
             throw new HeroNotFoundException(hero.getId());
         }
+    }
+
+    @Override
+    public void deleteHero(UUID id) {
+
     }
 }
