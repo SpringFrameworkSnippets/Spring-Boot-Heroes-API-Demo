@@ -18,7 +18,7 @@ public class HeroesServiceCommandImpl implements HeroesServiceCommand {
 
     @Override
     public void updateHero(Hero hero) {
-        int result = repository.update(mapper.map(hero));
+        var result = repository.update(mapper.map(hero));
         if(result < 1) {
             throw new HeroNotFoundException(hero.getId());
         }
@@ -26,6 +26,9 @@ public class HeroesServiceCommandImpl implements HeroesServiceCommand {
 
     @Override
     public void deleteHero(UUID id) {
-
+        var result = repository.delete(id);
+        if(result < 1) {
+            throw new HeroNotFoundException(id);
+        }
     }
 }

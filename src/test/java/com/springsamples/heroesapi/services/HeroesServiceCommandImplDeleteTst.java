@@ -1,5 +1,6 @@
 package com.springsamples.heroesapi.services;
 
+import com.springsamples.heroesapi.mappers.IHeroMapperDomainToEntity;
 import com.springsamples.heroesapi.repositories.HeroesRepositoryCommand;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,9 @@ public class HeroesServiceCommandImplDeleteTst {
     @MockBean
     HeroesRepositoryCommand repository;
 
+    @MockBean
+    IHeroMapperDomainToEntity mapper;
+
     @BeforeEach
     void beforeEach() {}
 
@@ -39,7 +43,7 @@ public class HeroesServiceCommandImplDeleteTst {
 
     @Test
     @DisplayName("Should delete hero using repository successfully")
-    void updateHero() {
+    void deleteHero() {
         given(repository.delete(any())).willReturn(1);
         then(repository).shouldHaveNoInteractions();
         service.deleteHero(UUID.randomUUID());
