@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HeroesRepositoryJpaImplTest {
 
     @Autowired
-    private HeroesRepository repository;
+    private HeroesRepositoryQuery repository;
 
     @Test
     @DisplayName("Should retrieve hero entity list")

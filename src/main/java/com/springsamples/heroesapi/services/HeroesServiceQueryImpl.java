@@ -2,7 +2,7 @@ package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
-import com.springsamples.heroesapi.repositories.HeroesRepository;
+import com.springsamples.heroesapi.repositories.HeroesRepositoryQuery;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeroesServiceQueryImpl implements HeroesServiceQuery {
 
-    private final HeroesRepository repository;
+    private final HeroesRepositoryQuery repository;
     private final IHeroMapperEntityToDomain mapper;
 
     @Override

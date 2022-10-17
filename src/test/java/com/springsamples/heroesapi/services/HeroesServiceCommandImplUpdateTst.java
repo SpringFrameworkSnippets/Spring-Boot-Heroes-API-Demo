@@ -2,7 +2,7 @@ package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToEntity;
-import com.springsamples.heroesapi.repositories.HeroesRepository;
+import com.springsamples.heroesapi.repositories.HeroesRepositoryCommand;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,11 +32,11 @@ class HeroesServiceCommandImplUpdateTst {
     IHeroMapperDomainToEntity mapper;
 
     @MockBean
-    HeroesRepository repository;
+    HeroesRepositoryCommand repository;
 
     @BeforeEach
     void beforeEach() {
-        //doNothing().when(repository).update(any());
+        given(repository.update(any())).willReturn(1);
         given(mapper.map(any())).willReturn(HeroEntity.builder()
                 .id(UUID.randomUUID())
                 .name("domain")
@@ -55,7 +55,7 @@ class HeroesServiceCommandImplUpdateTst {
         then(repository).shouldHaveNoInteractions();
         then(mapper).shouldHaveNoInteractions();
         service.updateHero(Hero.builder().build());
-        //then(repository).should(only()).update(any());
+        then(repository).should(only()).update(any());
         then(repository).shouldHaveNoMoreInteractions();
         then(mapper).should(only()).map(any());
         then(mapper).shouldHaveNoMoreInteractions();

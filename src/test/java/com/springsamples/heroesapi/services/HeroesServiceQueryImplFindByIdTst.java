@@ -2,7 +2,7 @@ package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
-import com.springsamples.heroesapi.repositories.HeroesRepository;
+import com.springsamples.heroesapi.repositories.HeroesRepositoryQuery;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class HeroesServiceQueryImplFindByIdTst {
     IHeroMapperEntityToDomain mapper;
 
     @MockBean
-    HeroesRepository repository;
+    HeroesRepositoryQuery repository;
 
     @BeforeEach
     void beforeEach() {

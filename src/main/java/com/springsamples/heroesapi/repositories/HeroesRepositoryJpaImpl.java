@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface HeroesRepositoryJpaImpl extends JpaRepository<HeroEntity, UUID> ,HeroesRepository { }
+public interface HeroesRepositoryJpaImpl extends JpaRepository<HeroEntity, UUID> ,HeroesRepositoryQuery { }
