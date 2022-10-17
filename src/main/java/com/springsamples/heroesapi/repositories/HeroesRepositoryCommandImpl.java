@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class HeroesRepositoryCommandImpl implements HeroesRepositoryCommand {
@@ -15,5 +17,10 @@ public class HeroesRepositoryCommandImpl implements HeroesRepositoryCommand {
     public int update(HeroEntity entity) {
         String query = "update HEROES set name = ? where id = ?";
         return template.update(query, entity.getName(), entity.getId().toString());
+    }
+
+    @Override
+    public int delete(UUID id) {
+        return 1;
     }
 }
