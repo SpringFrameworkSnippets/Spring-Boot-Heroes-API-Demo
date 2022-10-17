@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -47,6 +48,18 @@ public class HeroesServiceCommandImplDeleteTst {
         given(repository.delete(any())).willReturn(1);
         then(repository).shouldHaveNoInteractions();
         service.deleteHero(UUID.randomUUID());
+        then(repository).should(only()).delete(any());
+        then(repository).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    @DisplayName("Should raise exception when delete using repository fails")
+    void deleteHero_repositoryFailsTodelete() {
+        // This behaviour was already cover when we implemented
+        // findHeroById operation
+        given(repository.delete(any())).willReturn(0);
+        then(repository).shouldHaveNoInteractions();
+        assertThrows(RuntimeException.class, () -> service.deleteHero(any()));
         then(repository).should(only()).delete(any());
         then(repository).shouldHaveNoMoreInteractions();
     }

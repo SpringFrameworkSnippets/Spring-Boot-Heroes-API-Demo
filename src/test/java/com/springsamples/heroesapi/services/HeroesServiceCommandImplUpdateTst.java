@@ -64,7 +64,7 @@ class HeroesServiceCommandImplUpdateTst {
 
     @Test
     @DisplayName("Should raise exception when update using repository fails")
-    void updateHero_() {
+    void updateHero_repositoryFailsToUpdate() {
         given(repository.update(any())).willReturn(0);
         then(repository).shouldHaveNoInteractions();
         then(mapper).shouldHaveNoInteractions();

@@ -21,6 +21,6 @@ public class HeroesRepositoryCommandImpl implements HeroesRepositoryCommand {
 
     @Override
     public int delete(UUID id) {
-        return 1;
+        return 0;
     }
 }

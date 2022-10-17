@@ -36,4 +36,11 @@ class HeroesRepositoryCommandImplTest {
         int result = repository.update(entity);
         assertThat(result).isPositive();
     }
+
+    @Sql(scripts = {"/scripts/heroes_schema.sql", "/scripts/insert_heroes.sql"})
+    @Test
+    void delete() {
+        int result = repository.delete(UUID.fromString(BATMAN_VALID_HERO_ID));
+        assertThat(result).isPositive();
+    }
 }
