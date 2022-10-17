@@ -38,9 +38,7 @@ public class HeroesServiceImpl implements HeroesService {
     }
 
     @Override
-    public void updateHero(HeroDto dto) {
-
-    }
+    public void updateHero(Hero hero) {}
 
     private Function<HeroEntity, Hero> mapping() {
         return mapper::map;

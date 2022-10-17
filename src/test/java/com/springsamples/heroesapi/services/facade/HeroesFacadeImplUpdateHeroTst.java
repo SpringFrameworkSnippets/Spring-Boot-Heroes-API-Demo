@@ -1,6 +1,7 @@
 package com.springsamples.heroesapi.services.facade;
 
 import com.springsamples.heroesapi.domain.Hero;
+import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.services.HeroesFacadeImpl;
@@ -17,12 +18,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.UUID;
 
-import static com.springsamples.heroesapi.constants.Test.*;
-import static com.springsamples.heroesapi.constants.Test.FILTER_PARAM_VALUE;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -39,12 +36,15 @@ public class HeroesFacadeImplUpdateHeroTst {
     private HeroesService service;
 
     @MockBean
-    private IHeroMapperDtoToDomain mapper;
+    private IHeroMapperDtoToDomain dtoToDomain;
+
+    @MockBean
+    private IHeroMapperDomainToDto domainToDto;
 
     @BeforeEach
     void beforeEach() {
         doNothing().when(service).updateHero(any());
-        given(mapper.map(any())).willReturn(Hero.builder()
+        given(dtoToDomain.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
                 .build());
@@ -53,18 +53,18 @@ public class HeroesFacadeImplUpdateHeroTst {
     @AfterEach
     void afterEach() {
         reset(service);
-        reset(mapper);
+        reset(dtoToDomain);
     }
 
     @Test
     @DisplayName("Should update hero using service")
     void updateHero_withServiceInteraction() {
         then(service).shouldHaveNoInteractions();
-        then(mapper).shouldHaveNoInteractions();
+        then(dtoToDomain).shouldHaveNoInteractions();
         facade.updateHero(HeroDto.builder().build());
         then(service).should(only()).updateHero(any());
         then(service).shouldHaveNoMoreInteractions();
-        then(mapper).should(only()).map(any());
-        then(mapper).shouldHaveNoMoreInteractions();
+        then(dtoToDomain).should(only()).map(any());
+        then(dtoToDomain).shouldHaveNoMoreInteractions();
     }
 }
