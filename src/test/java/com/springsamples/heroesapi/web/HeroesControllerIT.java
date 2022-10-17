@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,8 +28,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Tag("Integration")
@@ -142,5 +142,38 @@ public class HeroesControllerIT {
         var updated = objectMapper.readValue(resultFindHeroByIdUpdated.getResponse().getContentAsString(), HeroDto.class);
         assertThat(updated.getName()).isNotEqualTo(nameBefore);
         assertThat(resultUpdateHero.getResponse().getHeader(HttpHeaders.LOCATION)).isEqualTo(BASE_URL + "/" + updated.getId().toString());
+    }
+
+    @Test
+    @DisplayName("Should get 202 response and delete hero with valid ID")
+    public void deleteHero() throws Exception {
+        MvcResult resultFindHeroById = this.mockMvc.perform(get(BASE_URL + "/{id}", TRACER_VALID_HERO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", notNullValue()))
+                .andReturn();
+
+        var forDelete = objectMapper.readValue(resultFindHeroById.getResponse().getContentAsString(), HeroDto.class);
+        final var idForDelete = forDelete.getId().toString();
+
+        MvcResult resultDeleteHero = this.mockMvc.perform(delete(BASE_URL + "/{id}", idForDelete)
+                        .with(user(USERNAME))
+                        .with(csrf()))
+                .andExpect(status().isAccepted())
+                .andReturn();
+
+        var idDeleted = objectMapper.readValue(resultDeleteHero.getResponse().getContentAsString(), String.class);
+        assertThat(idDeleted).isEqualTo(idForDelete);
+
+        this.mockMvc.perform(get(BASE_URL + "/{id}", idDeleted)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code", is(HttpStatus.NOT_FOUND.value())))
+                .andExpect(jsonPath("$.reason", is("Hero with id " + idDeleted + " not found")));
+
     }
 }
