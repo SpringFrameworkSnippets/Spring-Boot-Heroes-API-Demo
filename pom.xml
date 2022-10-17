@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.springsamples</groupId>
-    <artifactId>HeroesApi</artifactId>
+    <artifactId>heroesapi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>HeroesApi</name>
     <description>HeroesApi</description>
@@ -99,6 +99,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                        <includeLayerTools>true</includeLayerTools>
+                    </layers>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -135,6 +139,31 @@
                             -Amapstruct.defaultComponentModel=spring
                         </compilerArg>
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.39.0</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <images>
+                        <image>
+                            <name>heroesapi/${project.artifactId}</name>
+                            <alias>${project.artifactId}</alias>
+                            <build>
+                                    <assembly>
+                                        <mode>dir</mode>
+                                        <descriptorRef>artifact</descriptorRef>
+                                    </assembly>
+                                    <dockerFile>Dockerfile</dockerFile>
+                                    <tags>
+                                        <tag>latest</tag>
+                                        <tag>${project.version}</tag>
+                                    </tags>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
         </plugins>
