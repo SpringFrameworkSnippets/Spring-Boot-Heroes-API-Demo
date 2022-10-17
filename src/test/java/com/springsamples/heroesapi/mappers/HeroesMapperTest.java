@@ -2,6 +2,7 @@ package com.springsamples.heroesapi.mappers;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
+import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,12 @@ public class HeroesMapperTest {
     @Autowired
     IHeroMapperDomainToDto mapperDomainToDto;
 
+    @Autowired
+    IHeroMapperDtoToDomain mapperDtoToDomain;
+
     private Hero domain;
     private HeroEntity entity;
+    private HeroDto dto;
 
     @BeforeEach
     void beforeEach() {
@@ -40,6 +45,11 @@ public class HeroesMapperTest {
                 .id(ID)
                 .name(NAME)
                 .build();
+        dto = HeroDto.builder()
+                .id(ID)
+                .name(NAME)
+                .build();
+
     }
 
     @Test
@@ -56,5 +66,13 @@ public class HeroesMapperTest {
         var domain = mapperEntityToDomain.map(entity);
         assertThat(domain.getId()).isEqualTo(entity.getId());
         assertThat(domain.getName()).isEqualTo(entity.getName());
+    }
+
+    @Test
+    @DisplayName("Should map presentational hero to domain object")
+    void map_dtoToDomain() {
+        var domain = mapperDtoToDomain.map(dto);
+        assertThat(domain.getId()).isEqualTo(dto.getId());
+        assertThat(domain.getName()).isEqualTo(dto.getName());
     }
 }
