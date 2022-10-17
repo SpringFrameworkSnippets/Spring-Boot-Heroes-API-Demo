@@ -49,4 +49,9 @@ public class HeroesFacadeImpl implements HeroesFacade {
         serviceCommand.updateHero(dtoToDomain.map(dto));
         cacheService.invalidate(List.of("heroesCache", "heroCache", "heroByNameCache"));
     }
+
+    @Override
+    public void deleteHero(UUID id) {
+
+    }
 }

@@ -11,4 +11,6 @@ public interface HeroesFacade {
     Optional<HeroDto> findById(UUID id);
     List<HeroDto> findByNameContains(String name);
     void updateHero(HeroDto dto);
+
+    void deleteHero(UUID id);
 }

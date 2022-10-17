@@ -60,7 +60,7 @@ public class HeroesController {
                 .build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @LogExecutionTime
     public ResponseEntity<?> deleteHero(@PathVariable UUID id) {
         return ResponseEntity.accepted().build();
