@@ -18,6 +18,7 @@ public class HeroesFacadeImpl implements HeroesFacade {
 
     private final HeroesServiceQuery serviceQuery;
     private final HeroesServiceCommand serviceCommand;
+    private final CacheService cacheService;
     private final IHeroMapperDomainToDto domainToDto;
     private final IHeroMapperDtoToDomain dtoToDomain;
 
@@ -46,5 +47,6 @@ public class HeroesFacadeImpl implements HeroesFacade {
     @Override
     public void updateHero(HeroDto dto) {
         serviceCommand.updateHero(dtoToDomain.map(dto));
+        cacheService.invalidate(List.of("heroesCache", "heroCache", "heroByNameCache"));
     }
 }

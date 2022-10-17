@@ -3,6 +3,7 @@ package com.springsamples.heroesapi.exceptions;
 import com.springsamples.heroesapi.exceptions.model.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,18 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
         log.info(message);
         return ErrorDto.builder()
                 .code(HttpStatus.NOT_FOUND.value())
+                .reason(message)
+                .build();
+    }
+
+    @ExceptionHandler({ DataAccessException.class })
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorDto handleDataAccessException(DataAccessException ex) {
+        var message = ex.getMessage();
+        log.info(message);
+        return ErrorDto.builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .reason(message)
                 .build();
     }

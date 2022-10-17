@@ -3,10 +3,7 @@ package com.springsamples.heroesapi.services.facade;
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
-import com.springsamples.heroesapi.services.HeroesFacade;
-import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesServiceCommand;
-import com.springsamples.heroesapi.services.HeroesServiceQuery;
+import com.springsamples.heroesapi.services.*;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @ContextConfiguration( classes = {HeroesFacadeImpl.class})
@@ -43,6 +39,9 @@ public class HeroesFacadeImplFindAllTst {
 
     @MockBean
     HeroesServiceCommand serviceCommand;
+
+    @MockBean
+    CacheService cacheService;
 
     @MockBean
     private IHeroMapperDomainToDto domainToDto;

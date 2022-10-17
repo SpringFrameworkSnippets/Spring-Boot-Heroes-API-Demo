@@ -1,6 +1,7 @@
 package com.springsamples.heroesapi.services;
 
 import com.springsamples.heroesapi.domain.Hero;
+import com.springsamples.heroesapi.exceptions.HeroNotFoundException;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToEntity;
 import com.springsamples.heroesapi.repositories.HeroesRepositoryCommand;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,8 @@ public class HeroesServiceCommandImpl implements HeroesServiceCommand {
     @Override
     public void updateHero(Hero hero) {
         int result = repository.update(mapper.map(hero));
-        //TODO add custom exception
         if(result < 1) {
-            throw new RuntimeException("Update fails");
+            throw new HeroNotFoundException(hero.getId());
         }
     }
 }

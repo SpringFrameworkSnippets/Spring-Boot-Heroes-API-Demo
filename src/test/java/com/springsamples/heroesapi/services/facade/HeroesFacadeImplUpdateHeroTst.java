@@ -3,10 +3,7 @@ package com.springsamples.heroesapi.services.facade;
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
-import com.springsamples.heroesapi.services.HeroesFacade;
-import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesServiceCommand;
-import com.springsamples.heroesapi.services.HeroesServiceQuery;
+import com.springsamples.heroesapi.services.*;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +42,9 @@ public class HeroesFacadeImplUpdateHeroTst {
     @MockBean
     private IHeroMapperDomainToDto domainToDto;
 
+    @MockBean
+    CacheService cacheService;
+
     @BeforeEach
     void beforeEach() {
         doNothing().when(serviceCommand).updateHero(any());
@@ -52,6 +52,7 @@ public class HeroesFacadeImplUpdateHeroTst {
                 .id(UUID.randomUUID())
                 .name("dto")
                 .build());
+        doNothing().when(cacheService).invalidate(anyList());
     }
 
     @AfterEach
@@ -65,10 +66,13 @@ public class HeroesFacadeImplUpdateHeroTst {
     void updateHero_withServiceInteraction() {
         then(serviceCommand).shouldHaveNoInteractions();
         then(dtoToDomain).shouldHaveNoInteractions();
+        then(cacheService).shouldHaveNoInteractions();
         facade.updateHero(HeroDto.builder().build());
         then(serviceCommand).should(only()).updateHero(any());
         then(serviceCommand).shouldHaveNoMoreInteractions();
         then(dtoToDomain).should(only()).map(any());
         then(dtoToDomain).shouldHaveNoMoreInteractions();
+        then(cacheService).should(only()).invalidate(anyList());
+        then(cacheService).shouldHaveNoMoreInteractions();
     }
 }

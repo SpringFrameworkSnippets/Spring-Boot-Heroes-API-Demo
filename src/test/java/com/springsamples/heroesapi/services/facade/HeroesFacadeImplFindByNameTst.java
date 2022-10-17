@@ -3,10 +3,7 @@ package com.springsamples.heroesapi.services.facade;
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
-import com.springsamples.heroesapi.services.HeroesFacade;
-import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesServiceCommand;
-import com.springsamples.heroesapi.services.HeroesServiceQuery;
+import com.springsamples.heroesapi.services.*;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +45,9 @@ public class HeroesFacadeImplFindByNameTst {
     @MockBean
     private IHeroMapperDomainToDto domainToDto;
 
+    @MockBean
+    CacheService cacheService;
+
     @BeforeEach
     void beforeEach() {
         given(serviceQuery.findByNameContains(any())).willReturn(List.of(
@@ -60,7 +60,6 @@ public class HeroesFacadeImplFindByNameTst {
                         .name(SUPERMAN)
                         .build()
         ));
-
         given(domainToDto.map(any())).willReturn(HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
