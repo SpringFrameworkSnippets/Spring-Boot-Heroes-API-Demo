@@ -7,6 +7,7 @@ import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,7 @@ public class HeroesController {
     @DeleteMapping("/{id}")
     @LogExecutionTime
     public ResponseEntity<?> deleteHero(@PathVariable UUID id) {
-        return ResponseEntity.accepted().build();
+        facade.deleteHero(id);
+        return new ResponseEntity<>(id, HttpStatus.ACCEPTED);
     }
 }

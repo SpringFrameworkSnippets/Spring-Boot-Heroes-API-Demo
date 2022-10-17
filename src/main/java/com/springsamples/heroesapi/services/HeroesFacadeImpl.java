@@ -51,7 +51,5 @@ public class HeroesFacadeImpl implements HeroesFacade {
     }
 
     @Override
-    public void deleteHero(UUID id) {
-
-    }
+    public void deleteHero(UUID id) {}
 }

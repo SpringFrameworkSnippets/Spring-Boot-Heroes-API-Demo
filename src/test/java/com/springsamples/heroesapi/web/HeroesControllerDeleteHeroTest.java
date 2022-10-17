@@ -54,7 +54,8 @@ public class HeroesControllerDeleteHeroTest {
         this.mockMvc.perform(delete(BASE_URL + "/{id}", BATMAN_VALID_HERO_ID)
                         .with(user(USERNAME))
                         .with(csrf()))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$", is(BATMAN_VALID_HERO_ID)));
     }
 
     @Test
@@ -78,7 +79,8 @@ public class HeroesControllerDeleteHeroTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(USERNAME))
                         .with(csrf()))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$", is(BATMAN_VALID_HERO_ID)));
         then(facade).should(only()).deleteHero(any());
         then(facade).shouldHaveNoMoreInteractions();
     }
