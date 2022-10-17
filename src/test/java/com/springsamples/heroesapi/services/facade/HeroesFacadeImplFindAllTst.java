@@ -2,9 +2,11 @@ package com.springsamples.heroesapi.services.facade;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
+import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesService;
+import com.springsamples.heroesapi.services.HeroesServiceCommand;
+import com.springsamples.heroesapi.services.HeroesServiceQuery;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,14 +39,20 @@ public class HeroesFacadeImplFindAllTst {
     private HeroesFacade facade;
 
     @MockBean
-    private HeroesService service;
+    private HeroesServiceQuery serviceQuery;
 
     @MockBean
-    private IHeroMapperDomainToDto mapper;
+    HeroesServiceCommand serviceCommand;
+
+    @MockBean
+    private IHeroMapperDomainToDto domainToDto;
+
+    @MockBean
+    IHeroMapperDtoToDomain dtoToDomain;
 
     @BeforeEach
     void beforeEach() {
-        given(service.findAll()).willReturn(List.of(
+        given(serviceQuery.findAll()).willReturn(List.of(
                 Hero.builder()
                         .id(UUID.randomUUID())
                         .name(BATMAN)
@@ -55,7 +63,7 @@ public class HeroesFacadeImplFindAllTst {
                         .build()
         ));
 
-        given(mapper.map(any())).willReturn(HeroDto.builder()
+        given(domainToDto.map(any())).willReturn(HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
                 .build());
@@ -63,8 +71,8 @@ public class HeroesFacadeImplFindAllTst {
 
     @AfterEach
     void afterEach() {
-        reset(service);
-        reset(mapper);
+        reset(serviceQuery);
+        reset(domainToDto);
     }
 
     @Test
@@ -76,9 +84,9 @@ public class HeroesFacadeImplFindAllTst {
     @Test
     @DisplayName("Should get hero domain objects from service")
     void findAll_withServiceInteraction() {
-        then(service).shouldHaveNoInteractions();
+        then(serviceQuery).shouldHaveNoInteractions();
         var heroes = facade.findAll();
-        then(service).should(only()).findAll();
+        then(serviceQuery).should(only()).findAll();
         assertThat(heroes).isNotEmpty();
         assertThat(heroes).hasSize(2);
     }

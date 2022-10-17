@@ -5,7 +5,8 @@ import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesService;
+import com.springsamples.heroesapi.services.HeroesServiceCommand;
+import com.springsamples.heroesapi.services.HeroesServiceQuery;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,10 @@ public class HeroesFacadeImplUpdateHeroTst {
     private HeroesFacade facade;
 
     @MockBean
-    private HeroesService service;
+    private HeroesServiceCommand serviceCommand;
+
+    @MockBean
+    private HeroesServiceQuery serviceQuery;
 
     @MockBean
     private IHeroMapperDtoToDomain dtoToDomain;
@@ -43,7 +47,7 @@ public class HeroesFacadeImplUpdateHeroTst {
 
     @BeforeEach
     void beforeEach() {
-        doNothing().when(service).updateHero(any());
+        doNothing().when(serviceCommand).updateHero(any());
         given(dtoToDomain.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
@@ -52,18 +56,18 @@ public class HeroesFacadeImplUpdateHeroTst {
 
     @AfterEach
     void afterEach() {
-        reset(service);
+        reset(serviceCommand);
         reset(dtoToDomain);
     }
 
     @Test
     @DisplayName("Should update hero using service")
     void updateHero_withServiceInteraction() {
-        then(service).shouldHaveNoInteractions();
+        then(serviceCommand).shouldHaveNoInteractions();
         then(dtoToDomain).shouldHaveNoInteractions();
         facade.updateHero(HeroDto.builder().build());
-        then(service).should(only()).updateHero(any());
-        then(service).shouldHaveNoMoreInteractions();
+        then(serviceCommand).should(only()).updateHero(any());
+        then(serviceCommand).shouldHaveNoMoreInteractions();
         then(dtoToDomain).should(only()).map(any());
         then(dtoToDomain).shouldHaveNoMoreInteractions();
     }

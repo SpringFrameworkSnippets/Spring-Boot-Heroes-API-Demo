@@ -26,13 +26,13 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.reset;
 
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = HeroesServiceImpl.class)
-public class HeroesServiceImplFindByIdTst {
+@ContextConfiguration(classes = HeroesServiceQueryImpl.class)
+public class HeroesServiceQueryImplFindByIdTst {
 
     private static final UUID ID = UUID.fromString("b34d6c68-d9ee-42ea-aa39-71bc107fbd0b");
 
     @Autowired
-    HeroesService service;
+    HeroesServiceQuery service;
 
     @MockBean
     IHeroMapperEntityToDomain mapper;

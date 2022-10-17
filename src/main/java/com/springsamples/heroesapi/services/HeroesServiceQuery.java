@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface HeroesService {
+public interface HeroesServiceQuery {
     List<Hero> findAll();
     Optional<Hero> findById(UUID id);
     List<Hero> findByNameContains(String name);
-    void updateHero(Hero domain);
 }

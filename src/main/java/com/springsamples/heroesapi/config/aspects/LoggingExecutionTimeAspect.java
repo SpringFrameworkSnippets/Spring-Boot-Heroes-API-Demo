@@ -20,6 +20,7 @@ public class LoggingExecutionTimeAspect {
 
     @Around("@annotation(com.springsamples.heroesapi.config.aspects.LogExecutionTime)")
     public Object log(ProceedingJoinPoint point) throws Throwable {
+        stopWatch.reset();
         stopWatch.start();
         Object proceed = point.proceed();
         stopWatch.stop();
@@ -28,7 +29,6 @@ public class LoggingExecutionTimeAspect {
                 .append(" from Class ").append(point.getSignature().getDeclaringType())
                 .append(" took ").append(stopWatch.getTime(TimeUnit.MILLISECONDS))
                 .append(" ms");
-        stopWatch.reset();
         log.info(stringBuilder.toString());
         return proceed;
     }

@@ -2,9 +2,11 @@ package com.springsamples.heroesapi.services.facade;
 
 import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
+import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
 import com.springsamples.heroesapi.services.HeroesFacade;
 import com.springsamples.heroesapi.services.HeroesFacadeImpl;
-import com.springsamples.heroesapi.services.HeroesService;
+import com.springsamples.heroesapi.services.HeroesServiceCommand;
+import com.springsamples.heroesapi.services.HeroesServiceQuery;
 import com.springsamples.heroesapi.web.model.HeroDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,14 +37,20 @@ public class HeroesFacadeImplFindByNameTst {
     private HeroesFacade facade;
 
     @MockBean
-    private HeroesService service;
+    private HeroesServiceQuery serviceQuery;
 
     @MockBean
-    private IHeroMapperDomainToDto mapper;
+    HeroesServiceCommand serviceCommand;
+
+    @MockBean
+    IHeroMapperDtoToDomain dtoToDomain;
+
+    @MockBean
+    private IHeroMapperDomainToDto domainToDto;
 
     @BeforeEach
     void beforeEach() {
-        given(service.findByNameContains(any())).willReturn(List.of(
+        given(serviceQuery.findByNameContains(any())).willReturn(List.of(
                 Hero.builder()
                         .id(UUID.randomUUID())
                         .name(BATMAN)
@@ -53,7 +61,7 @@ public class HeroesFacadeImplFindByNameTst {
                         .build()
         ));
 
-        given(mapper.map(any())).willReturn(HeroDto.builder()
+        given(domainToDto.map(any())).willReturn(HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("dto")
                 .build());
@@ -61,21 +69,21 @@ public class HeroesFacadeImplFindByNameTst {
 
     @AfterEach
     void afterEach() {
-        reset(service);
-        reset(mapper);
+        reset(serviceQuery);
+        reset(domainToDto);
     }
 
     @Test
     @DisplayName("Should get heroes domain objects by name filter from service")
     void findByName_withServiceInteraction() {
-        then(service).shouldHaveNoInteractions();
-        then(mapper).shouldHaveNoInteractions();
+        then(serviceQuery).shouldHaveNoInteractions();
+        then(domainToDto).shouldHaveNoInteractions();
         var heroesByName = facade.findByNameContains(FILTER_PARAM_VALUE);
         assertThat(heroesByName).isNotEmpty();
         assertThat(heroesByName).hasSize(2);
-        then(mapper).should(times(2)).map(any());
-        then(mapper).shouldHaveNoMoreInteractions();
-        then(service).should(only()).findByNameContains(FILTER_PARAM_VALUE);
-        then(service).shouldHaveNoMoreInteractions();
+        then(domainToDto).should(times(2)).map(any());
+        then(domainToDto).shouldHaveNoMoreInteractions();
+        then(serviceQuery).should(only()).findByNameContains(FILTER_PARAM_VALUE);
+        then(serviceQuery).shouldHaveNoMoreInteractions();
     }
 }

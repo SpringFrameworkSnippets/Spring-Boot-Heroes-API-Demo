@@ -4,7 +4,6 @@ import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperEntityToDomain;
 import com.springsamples.heroesapi.repositories.HeroesRepository;
 import com.springsamples.heroesapi.repositories.entities.HeroEntity;
-import com.springsamples.heroesapi.web.model.HeroDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class HeroesServiceImpl implements HeroesService {
+public class HeroesServiceQueryImpl implements HeroesServiceQuery {
 
     private final HeroesRepository repository;
     private final IHeroMapperEntityToDomain mapper;
@@ -36,9 +35,6 @@ public class HeroesServiceImpl implements HeroesService {
     public List<Hero> findByNameContains(String name) {
         return toDomain(repository.findByNameContains(name));
     }
-
-    @Override
-    public void updateHero(Hero hero) {}
 
     private Function<HeroEntity, Hero> mapping() {
         return mapper::map;

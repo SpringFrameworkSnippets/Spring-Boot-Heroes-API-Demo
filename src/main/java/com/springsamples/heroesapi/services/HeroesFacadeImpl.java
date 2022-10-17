@@ -16,14 +16,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeroesFacadeImpl implements HeroesFacade {
 
-    private final HeroesService service;
+    private final HeroesServiceQuery serviceQuery;
+    private final HeroesServiceCommand serviceCommand;
     private final IHeroMapperDomainToDto domainToDto;
     private final IHeroMapperDtoToDomain dtoToDomain;
 
     @Cacheable(cacheNames = "heroesCache")
     @Override
     public List<HeroDto> findAll() {
-        return service.findAll().stream()
+        return serviceQuery.findAll().stream()
                 .map(domainToDto::map)
                 .collect(Collectors.toList());
     }
@@ -31,19 +32,19 @@ public class HeroesFacadeImpl implements HeroesFacade {
     @Cacheable(cacheNames = "heroCache", key = "#id")
     @Override
     public Optional<HeroDto> findById(UUID id) {
-        return service.findById(id).map(domainToDto::map);
+        return serviceQuery.findById(id).map(domainToDto::map);
     }
 
     @Cacheable(cacheNames = "heroByNameCache", key = "#name")
     @Override
     public List<HeroDto> findByNameContains(String name) {
-        return service.findByNameContains(name).stream()
+        return serviceQuery.findByNameContains(name).stream()
                 .map(domainToDto::map)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void updateHero(HeroDto dto) {
-        service.updateHero(dtoToDomain.map(dto));
+        serviceCommand.updateHero(dtoToDomain.map(dto));
     }
 }

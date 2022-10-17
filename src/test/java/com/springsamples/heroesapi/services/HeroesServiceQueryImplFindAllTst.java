@@ -17,7 +17,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.UUID;
 
-import static com.springsamples.heroesapi.constants.Test.*;
+import static com.springsamples.heroesapi.constants.Test.BATMAN;
+import static com.springsamples.heroesapi.constants.Test.SUPERMAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,11 +26,11 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = HeroesServiceImpl.class)
-public class HeroesServiceImplFindByNameTst {
+@ContextConfiguration(classes = HeroesServiceQueryImpl.class)
+public class HeroesServiceQueryImplFindAllTst {
 
     @Autowired
-    HeroesService service;
+    HeroesServiceQuery service;
 
     @MockBean
     IHeroMapperEntityToDomain mapper;
@@ -39,7 +40,7 @@ public class HeroesServiceImplFindByNameTst {
 
     @BeforeEach
     void beforeEach() {
-        given(repository.findByNameContains(any())).willReturn(List.of(
+        given(repository.findAll()).willReturn(List.of(
                 HeroEntity.builder()
                         .id(UUID.randomUUID())
                         .name(BATMAN)
@@ -52,7 +53,7 @@ public class HeroesServiceImplFindByNameTst {
 
         given(mapper.map(any())).willReturn(Hero.builder()
                 .id(UUID.randomUUID())
-                .name(FILTER_PARAM_VALUE)
+                .name("domain")
                 .build());
     }
 
@@ -63,18 +64,21 @@ public class HeroesServiceImplFindByNameTst {
     }
 
     @Test
-    @DisplayName("Should get hero list from repository by name filter")
-    void findByName_withRepoInteraction() {
-        then(repository).shouldHaveNoMoreInteractions();
-        then(mapper).shouldHaveNoMoreInteractions();
-        var heroesByName = service.findByNameContains(FILTER_PARAM_VALUE);
-        then(repository).should(only()).findByNameContains(FILTER_PARAM_VALUE);
-        then(repository).shouldHaveNoMoreInteractions();
+    @DisplayName("Should return hero domain objects")
+    void findAll() {
+        var heroes = service.findAll();
+        assertThat(heroes).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Should get hero entities from repository")
+    void findAll_withRepositoryInteraction() {
+        then(repository).shouldHaveNoInteractions();
+        then(mapper).shouldHaveNoInteractions();
+        var heroes = service.findAll();
+        assertThat(heroes).isNotEmpty();
+        assertThat(heroes).hasSize(2);
+        then(repository).should(only()).findAll();
         then(mapper).should(times(2)).map(any());
-        assertThat(heroesByName).isNotEmpty();
-        assertThat(heroesByName.stream()
-                .filter(h -> h.getName().contains(FILTER_PARAM_VALUE))
-                .count())
-                .isEqualTo(2);
     }
 }
