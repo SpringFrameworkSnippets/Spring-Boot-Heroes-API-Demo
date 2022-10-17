@@ -10,4 +10,5 @@ public interface HeroesFacade {
     List<HeroDto> findAll();
     Optional<HeroDto> findById(UUID id);
     List<HeroDto> findByNameContains(String name);
+    int updateHero(HeroDto dto);
 }

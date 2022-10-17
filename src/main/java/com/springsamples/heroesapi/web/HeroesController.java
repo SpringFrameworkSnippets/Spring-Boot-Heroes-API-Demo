@@ -50,6 +50,7 @@ public class HeroesController {
     }
 
     @PutMapping
+    @LogExecutionTime
     public ResponseEntity<?> updateHero(@Valid @RequestBody HeroDto dto) {
         return ResponseEntity.noContent().build();
     }

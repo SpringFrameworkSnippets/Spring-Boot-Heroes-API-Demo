@@ -20,6 +20,8 @@ import java.util.UUID;
 import static com.springsamples.heroesapi.constants.Test.USERNAME;
 import static com.springsamples.heroesapi.constants.Web.BASE_URL;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -114,5 +116,20 @@ public class HeresControllerUpdateHeroTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.reason", is("Invalid UUID")));
+    }
+
+    @Test
+    @DisplayName("Should get update operation result from facade")
+    void updateHero_withFacadeInteraction() throws Exception {
+        then(facade).shouldHaveNoInteractions();
+        this.mockMvc.perform(put(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(validContent))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME))
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
+        then(facade).should(only()).updateHero(validContent);
+        then(facade).shouldHaveNoMoreInteractions();
     }
 }

@@ -40,4 +40,9 @@ public class HeroesFacadeImpl implements HeroesFacade {
                 .map(mapper::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public int updateHero(HeroDto dto) {
+        return 0;
+    }
 }
