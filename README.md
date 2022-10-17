@@ -11,3 +11,4 @@ REST API using Spring Web MVC implemented by following a TDD approach
 * In-memory H2 database
 * Ehcache for query operations
 * Open API 3.0 documentation
+* DB migrations managed by flyway
