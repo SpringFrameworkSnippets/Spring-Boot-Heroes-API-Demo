@@ -31,6 +31,9 @@ public class HeroesMapperTest {
     @Autowired
     IHeroMapperDtoToDomain mapperDtoToDomain;
 
+    @Autowired
+    IHeroMapperDomainToEntity mapperDomainToEntity;
+
     private Hero domain;
     private HeroEntity entity;
     private HeroDto dto;
@@ -74,5 +77,13 @@ public class HeroesMapperTest {
         var domain = mapperDtoToDomain.map(dto);
         assertThat(domain.getId()).isEqualTo(dto.getId());
         assertThat(domain.getName()).isEqualTo(dto.getName());
+    }
+
+    @Test
+    @DisplayName("Should map domain object to entity")
+    void map_domainToEntity() {
+        var entity = mapperDomainToEntity.map(domain);
+        assertThat(entity.getId()).isEqualTo(domain.getId());
+        assertThat(entity.getName()).isEqualTo(domain.getName());
     }
 }
