@@ -1,6 +1,5 @@
 package com.springsamples.heroesapi.services.facade;
 
-import com.springsamples.heroesapi.domain.Hero;
 import com.springsamples.heroesapi.mappers.IHeroMapperDomainToDto;
 import com.springsamples.heroesapi.mappers.IHeroMapperDtoToDomain;
 import com.springsamples.heroesapi.services.*;
@@ -19,7 +18,6 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
@@ -48,30 +46,22 @@ public class HeroesFacadeImplDeleteHeroTst {
     @BeforeEach
     void beforeEach() {
         doNothing().when(serviceCommand).deleteHero(any());
-        given(dtoToDomain.map(any())).willReturn(Hero.builder()
-                .id(UUID.randomUUID())
-                .name("dto")
-                .build());
         doNothing().when(cacheService).invalidate(anyList());
     }
 
     @AfterEach
     void afterEach() {
         reset(serviceCommand);
-        reset(dtoToDomain);
     }
 
     @Test
-    @DisplayName("Should delete hero using service")
+    @DisplayName("Should delete hero using service and invalidate cache")
     void deleteHero_withServiceInteraction() {
         then(serviceCommand).shouldHaveNoInteractions();
-        then(dtoToDomain).shouldHaveNoInteractions();
         then(cacheService).shouldHaveNoInteractions();
         facade.deleteHero(UUID.randomUUID());
         then(serviceCommand).should(only()).deleteHero(any());
         then(serviceCommand).shouldHaveNoMoreInteractions();
-        then(dtoToDomain).should(only()).map(any());
-        then(dtoToDomain).shouldHaveNoMoreInteractions();
         // We could validate cache invalidation interaction
         // when delete operation occurs on a separate test.
         then(cacheService).should(only()).invalidate(anyList());

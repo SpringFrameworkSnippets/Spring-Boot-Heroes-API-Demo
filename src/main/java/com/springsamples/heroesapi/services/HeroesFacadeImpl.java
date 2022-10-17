@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeroesFacadeImpl implements HeroesFacade {
 
+    private static final List<String> HEROES_CACHE = List.of("heroesCache", "heroCache", "heroByNameCache");
     private final HeroesServiceQuery serviceQuery;
     private final HeroesServiceCommand serviceCommand;
     private final CacheService cacheService;
@@ -47,9 +48,12 @@ public class HeroesFacadeImpl implements HeroesFacade {
     @Override
     public void updateHero(HeroDto dto) {
         serviceCommand.updateHero(dtoToDomain.map(dto));
-        cacheService.invalidate(List.of("heroesCache", "heroCache", "heroByNameCache"));
+        cacheService.invalidate(HEROES_CACHE);
     }
 
     @Override
-    public void deleteHero(UUID id) {}
+    public void deleteHero(UUID id) {
+        serviceCommand.deleteHero(id);
+        cacheService.invalidate(HEROES_CACHE);
+    }
 }
