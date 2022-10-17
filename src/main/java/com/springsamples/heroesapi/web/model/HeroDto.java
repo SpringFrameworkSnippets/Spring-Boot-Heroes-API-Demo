@@ -16,6 +16,6 @@ import java.util.UUID;
 public class HeroDto implements Serializable {
     static final long serialVersionUID = 408801129527585250L;
     private UUID id;
-    @NotBlank
+    @NotBlank(message = "Name must not be blank")
     private String name;
 }

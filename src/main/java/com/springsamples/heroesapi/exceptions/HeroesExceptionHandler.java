@@ -6,6 +6,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,8 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolationException;
 
-import static com.springsamples.heroesapi.exceptions.HeroesExceptionHandlerMessageBuilder.buildConstraintViolationMessage;
-import static com.springsamples.heroesapi.exceptions.HeroesExceptionHandlerMessageBuilder.buildTypeMismatchMessage;
+import static com.springsamples.heroesapi.exceptions.HeroesExceptionHandlerMessageBuilder.*;
 
 @RestControllerAdvice
 @Slf4j
@@ -60,10 +60,23 @@ public class HeroesExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var message = buildMethodArgumentNotValidMessage(ex);
+        log.info(message);
         return ResponseEntity.badRequest()
                 .body(ErrorDto.builder()
                         .code(HttpStatus.BAD_REQUEST.value())
-                        .reason("Invalid Hero")
+                        .reason(message)
+                        .build());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var message = "Invalid UUID";
+        log.info(message);
+        return ResponseEntity.badRequest()
+                .body(ErrorDto.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .reason(message)
                         .build());
     }
 }

@@ -42,7 +42,7 @@ public class HeresControllerUpdateHeroTest {
     private MockMvc mockMvc;
 
     private HeroDto validContent;
-    private HeroDto invalidContent;
+    private HeroDto invalidName;
 
     @BeforeEach
     void setUp() {
@@ -56,7 +56,7 @@ public class HeresControllerUpdateHeroTest {
                 .name("dto")
                 .build();
 
-        invalidContent = HeroDto.builder()
+        invalidName = HeroDto.builder()
                 .id(UUID.randomUUID())
                 .name("")
                 .build();
@@ -75,16 +75,44 @@ public class HeresControllerUpdateHeroTest {
     }
 
     @Test
-    @DisplayName("Should return 400 response with error detail when invalid payload")
-    void updateHero_InvalidPayload() throws Exception {
+    @DisplayName("Should return 400 response with error detail when hero name is blank")
+    void updateHero_InvalidName() throws Exception {
         this.mockMvc.perform(put(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(invalidContent))
+                        .content(mapper.writeValueAsString(invalidName))
                         .accept(MediaType.APPLICATION_JSON)
                         .with(user(USERNAME))
                         .with(csrf()))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.reason", is("Invalid Hero")));
+                .andExpect(jsonPath("$.reason", is("Name must not be blank")));
+    }
+
+    @Test
+    @DisplayName("Should return 400 response with error detail when hero id is invalid")
+    void updateHero_InvalidId() throws Exception {
+        this.mockMvc.perform(put(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":\"b9\",\"name\":\"dto\"}")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME))
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.reason", is("Invalid UUID")));
+    }
+
+    @Test
+    @DisplayName("Should return 400 response with error detail when hero id is invalid")
+    void updateHero_InvalidIdAndName() throws Exception {
+        this.mockMvc.perform(put(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":\"b9\",\"name\":\"\"}")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user(USERNAME))
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.reason", is("Invalid UUID")));
     }
 }
